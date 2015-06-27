@@ -15,7 +15,7 @@ public class LoginActivity extends ActionBarActivity {
 
     /** Criação da Janela de Login
      * Ele pega os valores que estão nos campos de login e senha e compara com os valores corretos,
-     * caso esteja correto ele passa para o MainActivity.
+     * caso esteja correto ele passa para o MainActivity. Teste
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
