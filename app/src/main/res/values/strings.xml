@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">NoBolso</string>
+
+    <string name="action_settings">Configurações</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_cadastro">Cadastrar</string>
+    <string name="erro_loginsenha">Login/Senha Incorretos</string>
+</resources>
