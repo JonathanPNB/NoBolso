@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="unifimes.tcc.nobolso" >
+    package="unifimes.tcc.nobolso">
 
+    <!-- android:windowSoftInputMode=”adjustResize” -->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/app_name" >
+            android:name=".activity.MainActivity"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,9 +18,36 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CadastroActivity"
-            android:label="@string/title_activity_cadastro" >
+            android:name=".activity.ListUserActivity"
+            android:label="@string/title_activity_List"></activity>
+        <activity
+            android:name=".activity.ImageAdapter1Activity"
+            android:label="@string/title_activity_tela1"></activity>
+        <activity
+            android:name=".activity.ImageAdapter2Activity"
+            android:label="@string/title_activity_tela2"></activity>
+        <activity
+            android:name=".activity.CadtransacaoActivity"
+            android:label="@string/title_activity_cadtransacao"
+            android:parentActivityName=".activity.MainActivity">
+            //Usado para o botão voltar da ActionBar
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity" />
         </activity>
+        <activity
+            android:name=".activity.RelatoriosActivity"
+            android:label="@string/title_activity_relatorios">
+            android:parentActivityName=".activity.MainActivity" > //Usado para o botão voltar da
+            ActionBar
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activity.CategoriasActivity"
+            android:label="@string/title_activity_categorias"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -1,8 +1,47 @@
 <resources>
     <string name="app_name">NoBolso</string>
 
+    <string name="title_activity_List">lista</string>
     <string name="action_settings">Configurações</string>
-    <string name="title_activity_login">Login</string>
-    <string name="title_activity_cadastro">Cadastrar</string>
-    <string name="erro_loginsenha">Login/Senha Incorretos</string>
+    <string name="info_fecharapp">Pressione o Botão Voltar novamente para fechar o Aplicativo.</string>
+
+    <string name="erro_senhanaoconfere">As senhas não conferem</string>
+    <string name="erro_campovazio">Preencha todos os campos</string>
+    <string name="title_activity_tela1">tela1</string>
+
+    <string name="title_activity_tela2">tela2</string>
+    <string name="title_activity_cadtransacao">CadtransacaoActivity</string>
+    <string name="title_activity_relatorios">RelatoriosActivity</string>
+
+    <string name="info_selecione">Selecione o tipo da Transação</string>
+
+    <string-array name="array_tipo">
+        <item>Selecione o tipo de Transação</item>
+        <item>Receita</item>
+        <item>Despesa</item>
+    </string-array>
+
+    <string-array name="array_meses">
+        <item>Todos</item>
+        <item>Janeiro</item>
+        <item>Fevereiro</item>
+        <item>Março</item>
+        <item>Abril</item>
+        <item>Maio</item>
+        <item>Junho</item>
+        <item>Julho</item>
+        <item>Agosto</item>
+        <item>Setembro</item>
+        <item>Outubro</item>
+        <item>Novembro</item>
+        <item>Dezembro</item>
+    </string-array>
+
+    <string-array name="array_tipoRelatorio">
+        <item>Geral</item>
+        <item>Receita</item>
+        <item>Despesa</item>
+    </string-array>
+    <string name="title_activity_categorias">categorias</string>
+
 </resources>

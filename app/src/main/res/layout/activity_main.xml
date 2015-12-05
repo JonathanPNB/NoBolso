@@ -1,16 +1,175 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
+    android:weightSum="1" >
 
-    <TextView
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="3dp"
+        android:id="@+id/separator2"
+        android:visibility="visible" />
+
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Listar Usuários"
+        android:id="@+id/button_listar"
+        android:layout_gravity="center_horizontal"
+        android:onClick="onClick"
+        android:visibility="gone" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Logado Com Sucesso!!!"
-        android:id="@+id/textView"
-        android:layout_gravity="center_horizontal" />
-</RelativeLayout>
+        android:text="Saldo Atual"
+        android:id="@+id/textView_saldoAtual"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/textView_nomeusuario"
+        android:layout_alignEnd="@+id/textView_nomeusuario"
+        android:background="#ffffffff"
+        android:textAlignment="viewEnd"
+        android:textColor="#ff99cc00"
+        android:layout_weight="0.002"
+        android:autoText="false"
+        android:gravity="center"
+        android:elegantTextHeight="false" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:id="@+id/separator"
+        android:visibility="visible" />
+
+    <ListView
+        android:id="@+id/lstprincipal"
+        android:layout_width="fill_parent"
+        android:layout_height="170dp"
+        android:clipChildren="false"
+        android:dividerHeight="1dp"
+        android:scrollingCache="false"
+        android:background="#ffffffff"
+        android:textAlignment="center"
+        android:drawSelectorOnTop="false"
+        android:layout_gravity="center_horizontal">
+    </ListView>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="5dp"
+        android:id="@+id/separator1"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#FFFFFFFF">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nova \n Transação"
+            android:id="@+id/button_novaTransacao"
+            android:drawableTop="@drawable/newdoc"
+            android:layout_alignParentTop="true"
+            android:singleLine="false"
+            android:background="@drawable/bg_branco"
+            android:padding="10dp"
+            android:onClick="onClick"
+            android:layout_weight="0.3"
+            android:clickable="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Categorias"
+            android:id="@+id/button_categorias"
+            android:drawableTop="@drawable/categorias"
+            android:layout_alignParentTop="true"
+            android:background="#FFFFFFFF"
+            android:padding="10dp"
+            android:onClick="onClick"
+            android:layout_weight="0.3"
+            android:clickable="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Calendário"
+            android:id="@+id/button_calendario"
+            android:drawableTop="@drawable/calendar"
+            android:layout_alignParentTop="true"
+            android:background="#FFFFFFFF"
+            android:padding="10dp"
+            android:onClick="onClick"
+            android:layout_weight="0.3"
+            android:clickable="true" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="25dp"
+        android:id="@+id/separator3"
+        android:visibility="visible"
+        android:background="#FFFFFFFF"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFFFF">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Relatórios"
+            android:id="@+id/button_relatorios"
+            android:layout_gravity="top|left|center_vertical"
+            android:drawableTop="@drawable/vector"
+            android:layout_toLeftOf="@+id/button_categorias"
+            android:layout_toStartOf="@+id/button_categorias"
+            android:layout_alignTop="@+id/button5"
+            android:layout_alignBottom="@+id/button5"
+            android:background="#ffffffff"
+            android:clickable="true"
+            android:padding="10dp"
+            android:onClick="onClick"
+            android:layout_weight="0.3" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Teste Insert"
+            android:id="@+id/button5"
+            android:drawableTop="@drawable/vector"
+            android:layout_alignParentTop="true"
+            android:background="#ffffffff"
+            android:clickable="true"
+            android:padding="10dp"
+            android:onClick="onClick"
+            android:layout_weight="0.3" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sobre..."
+            android:id="@+id/button_sobre"
+            android:drawableTop="@drawable/about"
+            android:layout_below="@+id/button_novaTransacao"
+            android:layout_toRightOf="@+id/button_relatorios"
+            android:layout_toEndOf="@+id/button_relatorios"
+            android:background="#ffffffff"
+            android:clickable="true"
+            android:layout_gravity="top|right"
+            android:padding="10dp"
+            android:onClick="onClick"
+            android:layout_weight="0.3" />
+    </LinearLayout>
+
+</LinearLayout>
