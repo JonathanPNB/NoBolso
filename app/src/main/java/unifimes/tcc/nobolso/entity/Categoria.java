@@ -9,19 +9,10 @@ public class Categoria {
     private int id, tipo;
     private String descricao;
 
-    public int getId() {
-        return id;
-    }
-
-
     public Categoria(String desc, int tipo) {
         super();
         this.descricao = desc;
         this.tipo = tipo;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getTipo() {
@@ -40,6 +31,13 @@ public class Categoria {
         this.descricao = descricao;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
     @Override
     public String toString() {
         return getId() + " " +  getDescricao() + " " + getTipo();

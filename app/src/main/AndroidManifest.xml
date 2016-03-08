@@ -19,13 +19,13 @@
         </activity>
         <activity
             android:name=".activity.ListUserActivity"
-            android:label="@string/title_activity_List"></activity>
+            android:label="@string/title_activity_List" />
         <activity
-            android:name=".activity.ImageAdapter1Activity"
-            android:label="@string/title_activity_tela1"></activity>
+            android:name=".adapter.ImageAdapter1Activity"
+            android:label="@string/title_activity_tela1" />
         <activity
-            android:name=".activity.ImageAdapter2Activity"
-            android:label="@string/title_activity_tela2"></activity>
+            android:name=".adapter.ImageAdapter2Activity"
+            android:label="@string/title_activity_tela2" />
         <activity
             android:name=".activity.CadtransacaoActivity"
             android:label="@string/title_activity_cadtransacao"
@@ -37,9 +37,8 @@
         </activity>
         <activity
             android:name=".activity.RelatoriosActivity"
-            android:label="@string/title_activity_relatorios">
-            android:parentActivityName=".activity.MainActivity" > //Usado para o botão voltar da
-            ActionBar
+            android:label="@string/title_activity_relatorios"
+            android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
@@ -47,7 +46,27 @@
         <activity
             android:name=".activity.CategoriasActivity"
             android:label="@string/title_activity_categorias"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.dbteste"
+            android:label="@string/title_activity_dbteste"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.ListaTransacoesActivity"
+            android:label="@string/title_activity_lista_transacoes"
+            android:parentActivityName=".activity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activity.CadcategoriaActivity"
+            android:label="@string/title_activity_cadcategoria"
+            android:parentActivityName=".activity.MainActivity"/>
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".activity.MainActivity" />
     </application>
 
 </manifest>

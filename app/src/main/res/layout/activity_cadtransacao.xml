@@ -15,7 +15,7 @@
         android:spinnerMode="dropdown"
         android:prompt="@string/info_selecione"
         android:gravity="end"
-        android:entries="@array/array_tipo"
+        android:entries="@array/array_tipo_transacao"
         android:clickable="true" />
 
     <LinearLayout
@@ -56,8 +56,9 @@
             android:singleLine="true"
             android:numeric="decimal"
             android:editable="false"
-            android:enabled="true"
-            android:clickable="false" />
+            android:enabled="false"
+            android:clickable="false"
+            android:maxLength="14" />
 
     </LinearLayout>
 
@@ -83,7 +84,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/spinner_categoria"
             android:spinnerMode="dropdown"
-            android:clickable="true" />
+            android:clickable="false" />
 
     </LinearLayout>
 
@@ -91,7 +92,6 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="78dp"
-        android:id="@+id/lHor"
         android:weightSum="1"
         android:layout_marginTop="10dp">
 
@@ -108,16 +108,21 @@
             android:layout_height="wrap_content"
             android:inputType="date"
             android:id="@+id/editText_data"
-            android:editable="false"
-            android:ems="6" />
+            android:editable="true"
+            android:ems="6"
+            android:clickable="false"
+            android:numeric="integer"
+            android:enabled="false" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button_datateste"
+            android:id="@+id/button_data"
             android:onClick="showDatePickerDialog"
             android:background="@drawable/calendar"
-            android:nestedScrollingEnabled="false" />
+            android:nestedScrollingEnabled="false"
+            android:enabled="false"
+            android:clickable="false" />
 
     </LinearLayout>
 
@@ -144,7 +149,10 @@
             android:maxLines="8"
             android:gravity="top"
             android:layout_gravity="bottom"
-            android:background="@drawable/styles_edit_text_descricao" />
+            android:background="@drawable/styles_edit_text_descricao"
+            android:clickable="true"
+            android:editable="true"
+            android:visibility="visible" />
     </LinearLayout>
 
     <LinearLayout

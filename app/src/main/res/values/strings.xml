@@ -1,21 +1,24 @@
 <resources>
     <string name="app_name">NoBolso</string>
 
+    <string name="title_activity_main">Visão Geral</string>
+    <string name="title_activity_cadtransacao">Inserir </string>
+    <string name="title_activity_relatorios">Relatórios</string>
+    ]
+    <string name="title_activity_categorias">Categorias</string>
+    <string name="title_activity_dbteste">dbteste</string>
     <string name="title_activity_List">lista</string>
-    <string name="action_settings">Configurações</string>
-    <string name="info_fecharapp">Pressione o Botão Voltar novamente para fechar o Aplicativo.</string>
-
-    <string name="erro_senhanaoconfere">As senhas não conferem</string>
-    <string name="erro_campovazio">Preencha todos os campos</string>
     <string name="title_activity_tela1">tela1</string>
-
     <string name="title_activity_tela2">tela2</string>
-    <string name="title_activity_cadtransacao">CadtransacaoActivity</string>
-    <string name="title_activity_relatorios">RelatoriosActivity</string>
+    <string name="title_activity_cadcategoria">Cadastrar Categoria</string>
 
+    <string name="action_settings">Configurações</string>
+    <!--string name="info_fecharapp">Pressione o Botão Voltar novamente para fechar o Aplicativo.</string-->
+
+    <string name="erro_campovazio">Preencha todos os campos</string>
     <string name="info_selecione">Selecione o tipo da Transação</string>
 
-    <string-array name="array_tipo">
+    <string-array name="array_tipo_transacao">
         <item>Selecione o tipo de Transação</item>
         <item>Receita</item>
         <item>Despesa</item>
@@ -42,6 +45,7 @@
         <item>Receita</item>
         <item>Despesa</item>
     </string-array>
-    <string name="title_activity_categorias">categorias</string>
+    <string name="title_activity_lista_transacoes">lista_transacoes</string>
+    <string name="title_activity_main2">Main2Activity</string>
 
 </resources>

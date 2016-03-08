@@ -5,9 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -21,40 +19,51 @@ import unifimes.tcc.nobolso.entity.Categoria;
  * Classe para inserir/remover categoria no banco de dados
  */
 public class CategoriaDAO {
-
     public static final String NOME_TABELA = "Categoria";
-    public static final String COLUNA_ID = "id_categoria";
     public static final String COLUNA_DESCRICAO = "descricao";
     public static final String COLUNA_TIPO = "tipo";
 
     private SQLiteDatabase bd = null;
 
-
-    private static CategoriaDAO instance;
-
-    public static CategoriaDAO getInstance(Context context) {
-        if(instance == null)
-            instance = new CategoriaDAO(context);
-        return instance;
-    }
-
-    private CategoriaDAO(Context context) {
-        BDCore conn = BDCore.getInstance(context);
+    public CategoriaDAO(Context context) {
+        BDCore conn = new BDCore(context);
         bd = conn.getWritableDatabase();
+    }
+    public List<String> listar(int tipo){
+        List<String> list = new ArrayList<>();
+        String selectQuery;
+
+        // Select All Query
+        if(tipo != 2)
+            selectQuery = "SELECT * FROM Categoria where tipo = "+tipo;
+       else
+            selectQuery = "SELECT * FROM Categoria";
+
+        Cursor cursor = bd.rawQuery(selectQuery, null);
+
+        if(cursor.getCount() > 0){
+            cursor.moveToFirst();
+            do{
+                list.add(cursor.getString(1));
+            }while(cursor.moveToNext());
+        }
+
+        return(list);
     }
 
     public void salvar(Context context, Categoria cat) {
-        ContentValues values = gerarContentValeuesVeiculo(cat);
+        ContentValues values = contentValuesCategoria(cat);
         try {
             bd.insert(NOME_TABELA, null, values);
             Log.i("INFO", "Dados inseridos com sucesso. - " + values);
             Toast.makeText(context, "Dados inseridos com sucesso. " + values, Toast.LENGTH_SHORT).show();
         } catch (SQLiteException e) {
             Log.e("ERRO", e.getMessage());
+            return;
         }
     }
-
-    public List<Categoria> recuperarTodos() {
+/*
+    public List<Ca'tegoria> recuperarTodos() {
         String queryReturnAll = "SELECT * FROM " + NOME_TABELA;
         Cursor cursor = bd.rawQuery(queryReturnAll, null);
 
@@ -116,11 +125,11 @@ public class CategoriaDAO {
         }
         return categorias;
     }
-
-    private ContentValues gerarContentValeuesVeiculo(Categoria veiculo) {
+*/
+    private ContentValues contentValuesCategoria(Categoria cat) {
         ContentValues values = new ContentValues();
-        values.put(COLUNA_DESCRICAO, veiculo.getDescricao());
-        values.put(COLUNA_TIPO, veiculo.getTipo());
+        values.put(COLUNA_DESCRICAO, cat.getDescricao());
+        values.put(COLUNA_TIPO, cat.getTipo());
 
         return values;
     }
