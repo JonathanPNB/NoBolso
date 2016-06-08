@@ -5,6 +5,12 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="Overflow">
+        <item name="android:src">@drawable/ic_action_info</item>
+        <item name="android:background">?android:attr/actionBarItemBackground</item>
+        <item name="android:contentDescription">@string/status_bar_notification_info_overflow</item>
+    </style>
+
     <style name="TestSpinnerStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
         <item name="android:divider">#ff0000</item>
         <item name="android:dividerHeight">5dp</item>

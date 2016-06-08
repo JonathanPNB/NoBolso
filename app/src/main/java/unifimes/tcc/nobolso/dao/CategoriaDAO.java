@@ -16,121 +16,201 @@ import unifimes.tcc.nobolso.entity.Categoria;
 
 /**
  * Created by Jonathan on 14/11/2015.
- * Classe para inserir/remover categoria no banco de dados
+ * Classe para inserir/remover/alterar categorias no banco de dados
  */
 public class CategoriaDAO {
-    public static final String NOME_TABELA = "Categoria";
-    public static final String COLUNA_DESCRICAO = "descricao";
-    public static final String COLUNA_TIPO = "tipo";
 
     private SQLiteDatabase bd = null;
 
     public CategoriaDAO(Context context) {
-        BDCore conn = new BDCore(context);
+        BDCore conn = BDCore.getInstance(context);
         bd = conn.getWritableDatabase();
     }
-    public List<String> listar(int tipo){
-        List<String> list = new ArrayList<>();
+
+    public List<Categoria> listar(int tipo) {
+        List<Categoria> list = new ArrayList<>();
         String selectQuery;
+        //  Boolean visivel;
 
         // Select All Query
-        if(tipo != 2)
-            selectQuery = "SELECT * FROM Categoria where tipo = "+tipo;
-       else
-            selectQuery = "SELECT * FROM Categoria";
+        if (tipo != 2)
+            selectQuery = "SELECT * FROM " + BDCore.NOME_TABELA_CATEGORIA + " WHERE tipo = " + tipo + " and " +
+                    BDCore.COLUNA_VISIVEL + " = 1 ORDER BY " + BDCore.COLUNA_DESCRICAO + " ASC";
+        else
+            selectQuery = "SELECT * FROM " + BDCore.NOME_TABELA_CATEGORIA + " WHERE " +
+                    BDCore.COLUNA_VISIVEL + " = 1 ORDER BY " + BDCore.COLUNA_DESCRICAO + " ASC";
 
+//        selectQuery = "SELECT * FROM "+BDCore.NOME_TABELA_CATEGORIA+" ORDER BY "+BDCore.COLUNA_DESCRICAO+" ASC";
         Cursor cursor = bd.rawQuery(selectQuery, null);
 
-        if(cursor.getCount() > 0){
+        if (cursor.getCount() > 0) {
             cursor.moveToFirst();
-            do{
-                list.add(cursor.getString(1));
-            }while(cursor.moveToNext());
+            do {
+                Categoria cat = new Categoria();
+                cat.setId(cursor.getInt(0));
+                cat.setDescricao(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DESCRICAO)));
+                cat.setTipo(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_TIPO)));
+                if (cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_VISIVEL)) > 0)
+                    cat.setVisivel(true);
+                else
+                    cat.setVisivel(false);
+
+    /*            Log.e("CatDAO/listar", "Visivel: " + cat.toString() + " Visivel: "
+                        + cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_VISIVEL)));
+*/
+                list.add(cat);
+            } while (cursor.moveToNext());
         }
 
-        return(list);
+        return list;
+    }
+
+    public int buscaIdCategoria(String categoria) {//se id > -1 categoria existe no BD
+        String selectQuery;
+        int resultado;
+
+        selectQuery = "SELECT " + BDCore.COLUNA_ID + " FROM " + BDCore.NOME_TABELA_CATEGORIA + " where "
+                + BDCore.COLUNA_DESCRICAO + " = ?";
+
+        Cursor cursor = bd.rawQuery(selectQuery, new String[]{categoria});
+
+        if (cursor.moveToFirst()) {  // moves the cursor to the first row in the result set...
+            resultado = cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID));
+        } else {
+            resultado = -1;
+        }
+
+       //       Log.e("buscaIdCategoria",String.valueOf(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID))));
+        cursor.close();
+        return resultado;
+    }
+
+    public String buscaNomeCategoria(int id) {
+        String selectQuery;
+        String categoria;
+
+        selectQuery = "SELECT " + BDCore.COLUNA_DESCRICAO + " FROM " + BDCore.NOME_TABELA_CATEGORIA + " where "
+                + BDCore.COLUNA_ID + " = " + id;
+
+  //      Log.e("buscaNomeCategoria", selectQuery);
+        Cursor cursor = bd.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {  // moves the cursor to the first row in the result set...
+            categoria = cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DESCRICAO));
+        } else {
+            categoria = "";
+        }
+
+    //    Log.e("buscaNomeCategoria", cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DESCRICAO)));
+        cursor.close();
+        return categoria;
     }
 
     public void salvar(Context context, Categoria cat) {
-        ContentValues values = contentValuesCategoria(cat);
+        ContentValues novosValores = contentValuesCategoria(cat);
+        int idCategoria = this.buscaIdCategoria(cat.getDescricao());
+        if (idCategoria >= 0) {//CATEGORIA JA EXISTE
+            ContentValues oldValores = contentValuesCategoria(this.buscaObjCategoria(idCategoria));//VERIFICA OS VALORES Q JA ESTAO GRAVADOS
+
+            if (!oldValores.getAsBoolean(BDCore.COLUNA_VISIVEL)) {
+                Toast.makeText(context, "Categoria já cadastrada.", Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                try {
+                    bd.update(BDCore.NOME_TABELA_CATEGORIA, novosValores, BDCore.COLUNA_ID + " =  ?",
+                            new String[]{String.valueOf(idCategoria)});
+
+                    Toast.makeText(context, "Dados inseridos com sucesso. " + novosValores, Toast.LENGTH_SHORT).show();
+                } catch (SQLiteException e) {
+                    Log.e("ERRO", e.getMessage());
+                    return;
+                }
+            }
+        } else {
+            try {
+                bd.insert(BDCore.NOME_TABELA_CATEGORIA, null, novosValores);
+
+                Toast.makeText(context, "Dados inseridos com sucesso. " + novosValores, Toast.LENGTH_SHORT).show();
+            } catch (SQLiteException e) {
+                Log.e("ERRO", e.getMessage());
+                return;
+            }
+        }
+    }
+
+    public Categoria buscaObjCategoria(int id) {
+        Categoria cat = new Categoria();
+        String selectQuery;
+
+     //   Log.e("buscaObjCategoria", "ID: " + id);
+        selectQuery = "SELECT * FROM " + BDCore.NOME_TABELA_CATEGORIA + " WHERE " +
+                BDCore.COLUNA_ID + " = " + id;
+
+        Cursor cursor = bd.rawQuery(selectQuery, null);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                cat.setId(cursor.getInt(0));
+                cat.setDescricao(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DESCRICAO)));
+                cat.setTipo(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_TIPO)));
+                if (cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_VISIVEL)) > 0) {//inverte os valores true/false
+                    cat.setVisivel(false);
+                } else {
+                    cat.setVisivel(true);
+                }
+    //            Log.e("buscaObjCategoria", "Visivel: " + cat.isVisivel() + " / " +
+      //                  cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_VISIVEL))+" / ID: "+id);
+            } while (cursor.moveToNext());
+        }
+
+        return cat;
+    }
+
+    public void remover(int id) {//A categoria não pode ser deletada do bd
+        ContentValues valores = contentValuesCategoria(this.buscaObjCategoria(id));
         try {
-            bd.insert(NOME_TABELA, null, values);
-            Log.i("INFO", "Dados inseridos com sucesso. - " + values);
-            Toast.makeText(context, "Dados inseridos com sucesso. " + values, Toast.LENGTH_SHORT).show();
+            bd.update(BDCore.NOME_TABELA_CATEGORIA, valores, BDCore.COLUNA_ID + " =  ?", new String[]{String.valueOf(id)});
+            Log.e("INFO", "Categoria excluida com sucesso. " + valores.toString());
         } catch (SQLiteException e) {
             Log.e("ERRO", e.getMessage());
             return;
         }
     }
-/*
-    public List<Ca'tegoria> recuperarTodos() {
-        String queryReturnAll = "SELECT * FROM " + NOME_TABELA;
-        Cursor cursor = bd.rawQuery(queryReturnAll, null);
 
-        return construirVeiculoPorCursor(cursor);
-    }
+    public void alterar(Context context, Categoria cat) {
+        ContentValues novosValores = contentValuesCategoria(cat);
+        if (cat.getId() >= 0) {//CATEGORIA JA EXISTE
+            try {
+                bd.update(BDCore.NOME_TABELA_CATEGORIA, novosValores, BDCore.COLUNA_ID + " =  ?",
+                        new String[]{String.valueOf(cat.getId())});
 
-    public void deletar(Categoria cat) {
-
-        String[] valoresParaSubstituir = {
-                String.valueOf(cat.getId())
-        };
-
-        bd.delete(NOME_TABELA, COLUNA_ID + " =  ?", valoresParaSubstituir);
-    }
-
-    public void editar(Categoria cat) {
-        ContentValues valores = gerarContentValeuesVeiculo(cat);
-
-        String[] valoresParaSubstituir = {
-                String.valueOf(cat.getId())
-        };
-
-        bd.update(NOME_TABELA, valores, COLUNA_ID + " = ?", valoresParaSubstituir);
-    }
-
-    public void fecharConexao() {
-        if(bd != null && bd.isOpen())
-            bd.close();
-    }
-
-
-    private List<Categoria> construirVeiculoPorCursor(Cursor cursor) {
-        List<Categoria> categorias = new ArrayList<>();
-        if(cursor == null)
-            return categorias;
-
-        try {
-
-            if (cursor.moveToFirst()) {
-                do {
-
-            //        int indexID = cursor.getColumnIndex(COLUNA_ID);
-                    int indexDescricao = cursor.getColumnIndex(COLUNA_DESCRICAO);
-                    int indexTipo = cursor.getColumnIndex(COLUNA_TIPO);
-
-          //          int id = cursor.getInt(indexID);
-                    String descricao = cursor.getString(indexDescricao);
-                    int tipo = cursor.getInt(indexTipo);
-
-                    Categoria cat = new Categoria(descricao, tipo);
-
-                    categorias.add(cat);
-
-                } while (cursor.moveToNext());
+                Log.e("CDAO/alterar", novosValores.toString()+" ID: "+cat.getId());
+                Toast.makeText(context, "Dados alterados com sucesso. " + novosValores, Toast.LENGTH_SHORT).show();
+            } catch (SQLiteException e) {
+                Log.e("ERRO", e.getMessage());
+                return;
             }
-
-        } finally {
-            cursor.close();
         }
-        return categorias;
     }
-*/
+
     private ContentValues contentValuesCategoria(Categoria cat) {
         ContentValues values = new ContentValues();
-        values.put(COLUNA_DESCRICAO, cat.getDescricao());
-        values.put(COLUNA_TIPO, cat.getTipo());
+        int visivel;
+        values.put(BDCore.COLUNA_DESCRICAO, cat.getDescricao());
+        values.put(BDCore.COLUNA_TIPO, cat.getTipo());
+        if (cat.isVisivel()) {
+            visivel = 1;
+        } else {
+            visivel = 0;
+        }
+        values.put(BDCore.COLUNA_VISIVEL, visivel);
 
         return values;
     }
+/*
+    public void fecharConexao() {
+        if(bd != null && bd.isOpen())
+            bd.close();
+    }*/
 }

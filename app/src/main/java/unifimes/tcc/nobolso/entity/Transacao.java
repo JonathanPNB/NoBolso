@@ -1,20 +1,22 @@
 package unifimes.tcc.nobolso.entity;
 
+import java.math.BigDecimal;
+
 /**
  * Created by Jonathan on 14/11/2015.
  * Classe da entidade transação
  */
 public class Transacao {
     private int id, tipo;
-    private double valor;
+    private BigDecimal valor;
     private String categoria, data, descricao;
 
     public Transacao() {
-        super();
     }
-    public Transacao(String desc, int tipo, String categoria, double valor) {
+
+    public Transacao(String desc, int tipo, String categoria, BigDecimal valor) {
         super();
-        this.tipo = tipo;
+        this.tipo = tipo;//0=despesa / 1=receita
         this.valor = valor;
         this.categoria = categoria;
         this.descricao = desc;
@@ -28,11 +30,11 @@ public class Transacao {
         this.id = id;
     }
 
-    public double getValor() {
+    public BigDecimal getValor() {
         return valor;
     }
 
-    public void setValor(double valor) {
+    public void setValor(BigDecimal valor) {
         this.valor = valor;
     }
 

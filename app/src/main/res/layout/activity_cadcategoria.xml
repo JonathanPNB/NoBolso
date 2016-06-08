@@ -7,7 +7,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="unifimes.tcc.nobolso.activity.CadcategoriaActivity">
+    tools:context="unifimes.tcc.nobolso.activity.CadcategoriaActivity"
+    android:onClick="escondeKeyboard">
 
     <TextView
         android:layout_width="wrap_content"
@@ -15,17 +16,20 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Nome"
         android:id="@+id/textView9"
+        android:layout_alignWithParentIfMissing="false"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
+        android:id="@+id/editText_nome_categoria"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/textView9"
-        android:layout_toEndOf="@+id/textView9" />
+        android:layout_toEndOf="@+id/textView9"
+        android:capitalize="sentences" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -33,46 +37,48 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Tipo"
         android:id="@+id/textView10"
-        android:layout_below="@+id/editText"
+        android:layout_below="@+id/editText_nome_categoria"
         android:layout_centerHorizontal="true" />
 
-    <RadioButton
+    <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Despesa"
-        android:id="@+id/radioButton"
+        android:id="@+id/radioGroup"
         android:layout_below="@+id/textView10"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:checked="false" />
+        android:layout_alignParentStart="true">
 
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Receita"
-        android:id="@+id/radioButton2"
-        android:checked="false"
-        android:layout_below="@+id/radioButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Receita"
+            android:id="@+id/radioButton_receita"
+            android:checked="false"
+            android:layout_below="@+id/radioButton_despesa"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Despesa"
+            android:id="@+id/radioButton_despesa"
+            android:layout_below="@+id/textView10"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:checked="false" />
+
+    </RadioGroup>
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="Salvar"
         android:id="@+id/button5"
-        android:layout_below="@+id/radioButton2"
-        android:layout_alignRight="@+id/editText"
-        android:layout_alignEnd="@+id/editText" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button7"
-        android:layout_alignBaseline="@+id/button5"
-        android:layout_alignBottom="@+id/button5"
-        android:layout_alignLeft="@+id/radioButton2"
-        android:layout_alignStart="@+id/radioButton2" />
+        android:layout_below="@+id/textView10"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="83dp"
+        android:onClick="inserirCategoria" />
 
 </RelativeLayout>

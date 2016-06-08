@@ -2,26 +2,30 @@
     <string name="app_name">NoBolso</string>
 
     <string name="title_activity_main">Visão Geral</string>
-    <string name="title_activity_cadtransacao">Inserir </string>
+    <string name="title_activity_cadtransacao">Inserir</string>
     <string name="title_activity_relatorios">Relatórios</string>
-    ]
-    <string name="title_activity_categorias">Categorias</string>
-    <string name="title_activity_dbteste">dbteste</string>
-    <string name="title_activity_List">lista</string>
-    <string name="title_activity_tela1">tela1</string>
-    <string name="title_activity_tela2">tela2</string>
-    <string name="title_activity_cadcategoria">Cadastrar Categoria</string>
 
-    <string name="action_settings">Configurações</string>
+    <string name="title_activity_categorias">Categorias</string>
+    <string name="title_activity_cadcategoria">Cadastrar Categoria</string>
+    <string name="title_activity_lista_transacoes">Transações do Mês</string>
+    <string name="title_activity_lista_tipo_transacao">ListaTipoTransacao</string>
+    <string name="title_activity_editar">Editar</string>
+    <string name="title_activity_calendario">Calendario</string>
+    <string name="title_activity_grafico">Gráfico</string>
+
+    <string name="action_sobre">Sobre...</string>
     <!--string name="info_fecharapp">Pressione o Botão Voltar novamente para fechar o Aplicativo.</string-->
 
     <string name="erro_campovazio">Preencha todos os campos</string>
-    <string name="info_selecione">Selecione o tipo da Transação</string>
+    <string name="erro_radiobutton">Selecione uma das opções</string>
+    <string name="action_selecione">Selecione a Categoria</string>
+    <string name="erro_gerargrafico">Não existem dados para o período informado</string>
+    <!--string name="info_selecione">Selecione o tipo da Transação</string-->
 
     <string-array name="array_tipo_transacao">
-        <item>Selecione o tipo de Transação</item>
-        <item>Receita</item>
         <item>Despesa</item>
+        <item>Receita</item>
+        <item>Selecione o tipo da Transação</item>
     </string-array>
 
     <string-array name="array_meses">
@@ -40,12 +44,47 @@
         <item>Dezembro</item>
     </string-array>
 
-    <string-array name="array_tipoRelatorio">
-        <item>Geral</item>
-        <item>Receita</item>
+    <string-array name="array_tipoFiltroRelatorio">
+        <item>Todos</item>
         <item>Despesa</item>
+        <item>Receita</item>
     </string-array>
-    <string name="title_activity_lista_transacoes">lista_transacoes</string>
-    <string name="title_activity_main2">Main2Activity</string>
+
+    <string-array name="array_formatoRelatorio">
+        <item>Gráfico</item>
+        <item>Lista</item>
+    </string-array>
+
+    <string-array name="array_listaOpcoes">
+        <item>Editar</item>
+        <item>Excluir</item>
+    </string-array>
+
+    <array name="cores">
+        <item>@color/red</item>
+        <item>@color/ingr_green1</item>
+        <item>@color/cyan</item>
+        <item>@color/orange</item>
+        <item>@color/yellow</item>
+        <item>@color/green</item>
+        <item>@color/bright_pink</item>
+        <item>@color/blue</item>
+        <item>@color/spring_green</item>
+        <item>@color/magenta</item>
+        <item>@color/ingr_orange1</item>
+        <item>@color/ingr_yellow1</item>
+        <item>@color/ingr_blue1</item>
+        <item>@color/ingr_violet1</item>
+        <item>@color/ingr_red2</item>
+        <item>@color/ingr_orange2</item>
+        <item>@color/ingr_red1</item>
+        <item>@color/ingr_yellow2</item>
+        <item>@color/chartreuse</item>
+        <item>@color/ingr_green2</item>
+        <item>@color/violet</item>
+        <item>@color/ingr_blue2</item>
+        <item>@color/azure</item>
+        <item>@color/ingr_violet2</item>
+    </array>
 
 </resources>

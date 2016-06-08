@@ -8,11 +8,16 @@ public class Categoria {
 
     private int id, tipo;
     private String descricao;
+    private boolean visivel;
 
-    public Categoria(String desc, int tipo) {
+    public Categoria(String desc, int tipo, boolean visivel) {
         super();
         this.descricao = desc;
         this.tipo = tipo;
+        this.visivel = visivel;
+    }
+
+    public Categoria() {
     }
 
     public int getTipo() {
@@ -38,8 +43,16 @@ public class Categoria {
     public void setId(int id) {
         this.id = id;
     }
+
+    public boolean isVisivel() {
+        return visivel;
+    }
+
+    public void setVisivel(boolean visivel) {
+        this.visivel = visivel;
+    }
     @Override
     public String toString() {
-        return getId() + " " +  getDescricao() + " " + getTipo();
+        return getId() + " " +  getDescricao() + " " + getTipo() + " " + isVisivel();
     }
 }

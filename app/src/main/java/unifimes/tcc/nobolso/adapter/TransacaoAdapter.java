@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import unifimes.tcc.nobolso.R;
 import unifimes.tcc.nobolso.entity.Transacao;
+import unifimes.tcc.nobolso.utilidade.Utilidade;
 
 /**
  * Created by Jonathan on 15/02/2016.
@@ -20,7 +20,6 @@ import unifimes.tcc.nobolso.entity.Transacao;
 public class TransacaoAdapter extends BaseAdapter {
     private Context ctx;
     private ArrayList<Transacao> lista;
-    DecimalFormat formatoMoeda = new DecimalFormat("###,###,###.00");
 
     public TransacaoAdapter(Context context, ArrayList<Transacao> lista) {
         this.ctx = context;
@@ -60,20 +59,15 @@ public class TransacaoAdapter extends BaseAdapter {
         int idReceita  = R.id.listView;
 
         TextView descricao = (TextView) layout.findViewById(R.id.textView_desc);
-        if(transacao.getDescricao().length() < 40)
-            descricao.setText(transacao.getDescricao());
-        else
-            descricao.setText(transacao.getDescricao());
+        descricao.setText(transacao.getDescricao());
 
         TextView categoria = (TextView) layout.findViewById(R.id.textView_Categoria);
         categoria.setText(transacao.getCategoria());
 
         TextView valor = (TextView) layout.findViewById(R.id.textView_Valor);
-        if(idReceita == parent.getId()) {
-            valor.setText(String.valueOf("R$ +" + formatoMoeda.format(transacao.getValor())));
-        }
-        else {
-            valor.setText(String.valueOf("R$ -" + formatoMoeda.format(transacao.getValor())));
+        valor.setText(String.valueOf("R$ " + Utilidade.formataMoeda(transacao.getValor())));
+        if(idReceita != parent.getId()) {
+//            valor.setText(String.valueOf("R$ " + Utilidade.formataMoeda(transacao.getValor())));
             valor.setTextColor(Color.RED);
         }
 

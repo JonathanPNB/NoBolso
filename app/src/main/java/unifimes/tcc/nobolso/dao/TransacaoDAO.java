@@ -8,72 +8,51 @@ import android.database.sqlite.SQLiteException;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.List;
 
 import unifimes.tcc.nobolso.database.BDCore;
 import unifimes.tcc.nobolso.entity.Transacao;
+import unifimes.tcc.nobolso.utilidade.Utilidade;
 
 /**
  * Created by Jonathan on 14/11/2015.
  * Classe de insercao da transacao no banco de dados
  */
 public class TransacaoDAO {
-    public static final String NOME_TABELA_DESPESA = "Despesa";
-    public static final String NOME_TABELA_RECEITA = "Receita";
+
     private String NOME_TABELA;
-
-    public static final String COLUNA_ID = "id_categoria";
-    public static final String COLUNA_DESCRICAO = "descricao";
-    public static final String COLUNA_VALOR = "valor";
-    public static final String COLUNA_DATA = "data";
-
-    public static final String COLUNA_CATEGORIA = "descricao";
-
     private SQLiteDatabase bd;
     BDCore aux;
+    public CategoriaDAO catDAO;
+    // public Utilidade util;
+    private Context ctx;
 
-    /*   private static TransacaoDAO instance;
-
-       public static TransacaoDAO getInstance(Context context) {
-           if (instance == null)
-               instance = new TransacaoDAO(context);
-           return instance;
-       }
-   */
     public TransacaoDAO(Context context) {
-        aux = new BDCore(context);
-        bd = aux.getWritableDatabase();
+        this.aux = BDCore.getInstance(context);
+        this.bd = aux.getWritableDatabase();
+        this.ctx = context;
     }
 
-    public void salvar(Context context, Transacao tran) {
+    public void salvarTransacao(Transacao tran) {
         ContentValues values = contentValuesTransacao(tran);
+        //     util = new Utilidade(ctx);
+
         if (tran.getTipo() == 0)
-            NOME_TABELA = NOME_TABELA_DESPESA;
+            NOME_TABELA = BDCore.NOME_TABELA_DESPESA;
         else
-            NOME_TABELA = NOME_TABELA_RECEITA;
+            NOME_TABELA = BDCore.NOME_TABELA_RECEITA;
 
         try {
             bd.insert(NOME_TABELA, null, values);
-            //   bd.insert("Receita", null, 1,250.0,2016-02-02,"TESTE1",1);
-            Log.i("INFO", "Dados inseridos com sucesso. - " + values);
-            Toast.makeText(context, "Dados inseridos com sucesso. " + values, Toast.LENGTH_SHORT).show();
+            Log.e("CADASTRO", "Dados inseridos com sucesso. - " + values);
+            Toast.makeText(ctx, "Dados inseridos com sucesso. " + values, Toast.LENGTH_SHORT).show();
         } catch (SQLiteException e) {
             Log.e("ERRO", e.getMessage());
             return;
         }
     }
 
-    private ContentValues contentValuesTransacao(Transacao tran) {
-        ContentValues values = new ContentValues();
-        values.put(COLUNA_VALOR, tran.getValor());
-        values.put(COLUNA_ID, tran.getTipo());
-        values.put(COLUNA_CATEGORIA, tran.getCategoria());
-        values.put(COLUNA_DESCRICAO, tran.getDescricao());
-        values.put(COLUNA_DATA, tran.getData());
-
-        return values;
-    }
 /*
     public void inserir(Usuario usuario){
         ContentValues valores = new ContentValues();
@@ -98,60 +77,175 @@ public class TransacaoDAO {
         bd.delete("usuario", "_id = "+usuario.getId(), null);
     }*/
 
-    public List<Transacao> buscar() {
-        List<Transacao> list = new ArrayList<>();
-        String[] Tabelas = {NOME_TABELA_DESPESA, NOME_TABELA_RECEITA};//despesa = 0 / receita = 1
+    public ArrayList<Transacao> buscarTodasTransacoes() {
+        ArrayList<Transacao> list = new ArrayList<>();
+        String[] Tabelas = {BDCore.NOME_TABELA_DESPESA, BDCore.NOME_TABELA_RECEITA};//despesa = 0 / receita = 1
 
         for (int i = 0; i < Tabelas.length; i++) {
 
-            Cursor cursor = bd.query(Tabelas[i].toString(), null, null, null, null, null, "data ASC");
+            Cursor cursor = bd.query(Tabelas[i], null, null, null, null, null, "data ASC");
 
             if (cursor.getCount() > 0) {
                 cursor.moveToFirst();
 
                 do {
                     Transacao tr = new Transacao();
-                    tr.setId(cursor.getInt(0));
-                    tr.setValor(cursor.getDouble(1));
-                    tr.setData(cursor.getString(2));
-                    tr.setDescricao(cursor.getString(3));
-                    tr.setTipo(cursor.getInt(4));//0=despesa / 1=receita
-                    if (cursor.getInt(4) == 0)
-                        tr.setCategoria("Despesa");
-                    else
-                        tr.setCategoria("Receita");
+                    tr.setId(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID)));
+                    tr.setDescricao(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DESCRICAO)));
+                    tr.setValor(new BigDecimal(String.valueOf(cursor.getDouble(cursor.getColumnIndex(BDCore.COLUNA_VALOR)))));
+                    tr.setData(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DATA)));
+                    tr.setCategoria(catDAO.buscaNomeCategoria(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID_CATEGORIA))));
 
                     list.add(tr);
-                    Log.w("[BD]Buscar Transação", tr.toString());
+                    Log.e("[BD]Buscar Transação", tr.toString());
 
                 } while (cursor.moveToNext());
             }
+            cursor.close();
         }
-        return (list);
+        //    catDAO.fecharConexao();
+        return list;
     }
 
-    public ArrayList<Transacao> listar(String categoria) {
+    public ArrayList<Transacao> transacoesMes(String categoria, int mes, int ano) {
         ArrayList<Transacao> list = new ArrayList<>();
         String selectQuery;
+        catDAO = new CategoriaDAO(ctx);
+        String[] periodo = new String[]{Utilidade.formataNumero(mes, 2), String.valueOf(ano)};
+        Cursor cursor;
 
-        selectQuery = "SELECT * FROM "+categoria;
+        Log.e("transacoesMes", "Args: " + categoria + " - " + mes + "/" + ano);
 
-        Cursor cursor = bd.rawQuery(selectQuery, null);
+        selectQuery = "SELECT * FROM " + categoria + " WHERE strftime('%m', " + BDCore.COLUNA_DATA + ") = ? " +
+                "AND strftime('%Y', " + BDCore.COLUNA_DATA + ") = ?";
 
-        if(cursor.getCount() > 0){
+        cursor = bd.rawQuery(selectQuery, periodo);
+
+        if (cursor.getCount() > 0) {
             cursor.moveToFirst();
-            do{
+            do {
                 Transacao transacao = new Transacao();
-                transacao.setDescricao(cursor.getString(3));
-                transacao.setValor(cursor.getDouble(1));
-                if (cursor.getInt(4) == 0)
-                    transacao.setCategoria("Despesa");
-                else
-                    transacao.setCategoria("Receita");
+                transacao.setId(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID)));
+                transacao.setDescricao(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DESCRICAO)));
+                transacao.setValor(new BigDecimal(String.valueOf(cursor.getDouble(cursor.getColumnIndex(BDCore.COLUNA_VALOR)))));
+                transacao.setData(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DATA)));
+                transacao.setCategoria(catDAO.buscaNomeCategoria(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID_CATEGORIA))));
 
                 list.add(transacao);
-            }while(cursor.moveToNext());
+                Log.e("[BD]Listar Transação", String.valueOf(cursor.getInt(0)) + " / " + cursor.getDouble(cursor.getColumnIndex("valor")) + " / " +
+                        cursor.getString(cursor.getColumnIndex("data")) + " / " + cursor.getString(cursor.getColumnIndex("descricao")) + " / " +
+                        cursor.getInt(cursor.getColumnIndex("id_categoria")));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        //    catDAO.fecharConexao();
+        return list;
+    }
+
+    public ArrayList<Transacao> relatorioTransacao(String tipoRelatorio, int mes, int ano, String categoria) {
+        ArrayList<Transacao> list = new ArrayList<>();
+        catDAO = new CategoriaDAO(ctx);
+        String selectQuery;
+        String[] Tabelas = {BDCore.NOME_TABELA_DESPESA, BDCore.NOME_TABELA_RECEITA};//despesa = 0 / receita = 1
+        String nomeTransacao = "";
+        Cursor cursor;
+        String dataInicial, dataFinal;
+
+        if (tipoRelatorio.equalsIgnoreCase("Despesa")) {//despesa
+            nomeTransacao = "despesa";
+        } else if(tipoRelatorio.equalsIgnoreCase("Receita")) {//receita
+            nomeTransacao = "receita";
+        }
+
+        if (mes == 0) {//todos os meses do ano
+            dataInicial = ano + "-" + Utilidade.formataNumero(1, 2) + "-01";
+            dataFinal = ano + "-" + Utilidade.formataNumero(12, 2) + "-" + Utilidade.ultimoDiadoMes(12);
+        } else {//pegar apenas o mes selecionado
+            dataInicial = ano + "-" + Utilidade.formataNumero(mes, 2) + "-01";
+            dataFinal = ano + "-" + Utilidade.formataNumero(mes, 2) + "-" + Utilidade.ultimoDiadoMes(mes);
+        }
+
+        if (ano == 0) {//todos os anos
+            dataInicial = "2015" + "-" + Utilidade.formataNumero(1, 2) + "-01";
+            dataFinal = Utilidade.getAno() + "-" + Utilidade.formataNumero(12, 2) + "-" + Utilidade.ultimoDiadoMes(12);
+        }
+
+        int idCategoria;
+        if (!categoria.equals("Todas")) {
+            idCategoria = catDAO.buscaIdCategoria(categoria);
+        }
+
+        Log.e("relatorioTransacao", "Args: " + tipoRelatorio + " - " + mes + "/" + ano + " - " + categoria);
+
+        if (!tipoRelatorio.equalsIgnoreCase("Todos")) {//despesa ou receita
+            //data between '2016-05-01' and '2016-05-31'
+            selectQuery = "SELECT * FROM " + nomeTransacao + " WHERE " + BDCore.COLUNA_DATA + " between '" + dataInicial + "' " +
+                    "AND '" + dataFinal + "'";
+
+            String[] colunas = new String[]{BDCore.COLUNA_ID, BDCore.COLUNA_DESCRICAO, BDCore.COLUNA_VALOR,
+                    BDCore.COLUNA_DATA, BDCore.COLUNA_ID_CATEGORIA};
+            Log.e("relatorioTransacao", nomeTransacao + " - " + selectQuery);
+            cursor = bd.rawQuery(selectQuery, null);
+
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                do {
+                    Transacao transacao = new Transacao();
+                    transacao.setId(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID)));
+                    transacao.setDescricao(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DESCRICAO)));
+                    transacao.setValor(new BigDecimal(String.valueOf(cursor.getDouble(cursor.getColumnIndex(BDCore.COLUNA_VALOR)))));
+                    transacao.setData(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DATA)));
+                    transacao.setCategoria(catDAO.buscaNomeCategoria(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID_CATEGORIA))));
+
+                    list.add(transacao);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        } else {//todas as transacoes
+
+            for (int i = 0; i < Tabelas.length; i++) {
+                selectQuery = "SELECT * FROM " + Tabelas[i] + " WHERE " + BDCore.COLUNA_DATA + " between '" + dataInicial + "' " +
+                        "AND '" + dataFinal + "'";
+                cursor = bd.rawQuery(selectQuery, null);
+
+                Log.e("relatorioTransacao", "Transações - " + selectQuery);
+
+                if (cursor.getCount() > 0) {
+                    cursor.moveToFirst();
+
+                    do {
+                        Transacao tr = new Transacao();
+                        tr.setId(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID)));
+                        tr.setDescricao(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DESCRICAO)));
+                        tr.setValor(new BigDecimal(String.valueOf(cursor.getDouble(cursor.getColumnIndex(BDCore.COLUNA_VALOR)))));
+                        tr.setData(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DATA)));
+                        tr.setCategoria(catDAO.buscaNomeCategoria(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID_CATEGORIA))));
+
+                        list.add(tr);
+                        Log.w("[BD]Buscar Transação", tr.toString());
+
+                    } while (cursor.moveToNext());
+                }
+                cursor.close();
+            }
         }
         return list;
     }
+
+    private ContentValues contentValuesTransacao(Transacao tran) {
+        ContentValues values = new ContentValues();
+        catDAO = new CategoriaDAO(ctx);
+        values.put(BDCore.COLUNA_VALOR, String.valueOf(tran.getValor()));
+        values.put(BDCore.COLUNA_DATA, tran.getData());
+        values.put(BDCore.COLUNA_DESCRICAO, tran.getDescricao());
+        values.put(BDCore.COLUNA_ID_CATEGORIA, catDAO.buscaIdCategoria(tran.getCategoria()));//pegar o nome da categoria e buscar seu id na tabela Categorias
+
+        //   catDAO.fecharConexao();
+        return values;
+    }
+/*
+    public void fecharConexao() {
+        if(bd != null && bd.isOpen())
+            bd.close();
+    }*/
 }

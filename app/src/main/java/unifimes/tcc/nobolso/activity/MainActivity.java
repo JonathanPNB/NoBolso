@@ -5,48 +5,69 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
+
+import java.math.BigDecimal;
 
 import unifimes.tcc.nobolso.R;
-import unifimes.tcc.nobolso.adapter.ImageAdapter;
+import unifimes.tcc.nobolso.adapter.VisaoGeralAdapter;
+import unifimes.tcc.nobolso.dao.TransacaoDAO;
+import unifimes.tcc.nobolso.utilidade.Utilidade;
 
 public class MainActivity extends AppCompatActivity {
-    boolean[] listImages = {true};
     private ListView lista;
+    Bundle bundle = new Bundle();
+    Intent intent;
+    TransacaoDAO tDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        tDAO = new TransacaoDAO(this);
+
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//deixa a tela apenas na vertical
-        this.listViewImageAdapter();
+        this.listViewVisaoGeralAdapter();
         this.carregarFloatingButton();
     }
 
     public void onClick(View v) {
-        Intent intent;
         switch (v.getId()) {
             case R.id.button_categorias:
                 intent = new Intent(this, CategoriasActivity.class);
                 startActivity(intent);
+                //       finish();
                 break;
-   /*         case R.id.button_calendario:
-                Toast.makeText(getBaseContext(), "Botão ainda não funcional", Toast.LENGTH_SHORT).show();
-                break;*/
+            case R.id.button_calendario:
+    /*            BDCore bd = BDCore.getInstance(this);
+                bd.clearDB();
+                Toast.makeText(getBaseContext(), "DataBase Limpa com Sucesso", Toast.LENGTH_SHORT).show();
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+*/
+                intent = new Intent(this, Calendario.class);
+                startActivity(intent);
+         //       finish();
+
+                break;
             case R.id.button_relatorios:
                 intent = new Intent(this, RelatoriosActivity.class);
                 startActivity(intent);
+                //        finish();
                 break;
             case R.id.button_transacoes:
                 intent = new Intent(this, ListaTransacoesActivity.class);
+                bundle.putString("tipoRelatório", "Geral");
+                intent.putExtras(bundle);
                 startActivity(intent);
+                //       finish();
                 break;
             default:
                 break;
@@ -67,9 +88,8 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        switch (item.getItemId()) {
-            case R.id.action_settings:
+        switch (id) {
+            case R.id.action_sobre:
                 break;
             default:
                 break;
@@ -78,33 +98,59 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void listViewImageAdapter() {
-        //ListView
+    private void listViewVisaoGeralAdapter() {
         lista = (ListView) findViewById(R.id.lstprincipal);
 
-        String[] tipos = new String[]{"Renda", "Gastos", "Saldo"};
+        BigDecimal saldoAcumulado, totalReceita, totalDespesa, saldoMes;
 
-        ArrayAdapter<String> adapter = new ImageAdapter(MainActivity.this, R.layout.activity_imageadapter1, R.id.text1,
-                R.id.image1, R.id.image2, tipos, listImages);
+        totalReceita = Utilidade.somaValores(tDAO.transacoesMes("Receita", Utilidade.getMes(), Utilidade.getAno()));
+        totalDespesa = Utilidade.somaValores(tDAO.transacoesMes("Despesa", Utilidade.getMes(), Utilidade.getAno()));
+        saldoMes = totalReceita.add(totalDespesa);
 
-        lista.setAdapter(adapter);
+        saldoAcumulado = Utilidade.somaValores(tDAO.buscarTodasTransacoes()).subtract(saldoMes);
 
+        Log.e("listVisaoGeralAdapter", "buscarTodasTransacoes = " + Utilidade.somaValores(tDAO.buscarTodasTransacoes()) +
+                " / saldoAcumulado = " + saldoAcumulado.toString());
+        Log.e("listVisaoGeralAdapter", Utilidade.getMes() + "/" + Utilidade.getAno());
+
+        String[] tipos = {"Saldo Acumulado", "Entrada", "Saída", "Saldo do Mês"};
+        BigDecimal[] valores = {saldoAcumulado, totalReceita, totalDespesa, saldoMes};
+
+        lista.setAdapter(new VisaoGeralAdapter(getBaseContext(), tipos, valores));
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> myAdapter, View myView, int myItemInt, long mylng) {
+            public void onItemClick(AdapterView<?> myAdapter, View myView, int position, long mylng) {
+                Intent intent;
 
-                if (lista.getItemAtPosition(myItemInt) != null) {
+                if (lista.getItemAtPosition(position) != null) {
 
-// Pega o item naquela posição
-                    Object o = lista.getItemAtPosition(myItemInt);
+                    intent = new Intent(getBaseContext(), ListaTransacoesActivity.class);
 
-                    lista.getPositionForView(myView);
-
-                    String pais = o.toString();
-
-// Create a piece of toast.
-                    Toast.makeText(getBaseContext(), pais, Toast.LENGTH_SHORT).show();
+                    switch (position) {
+                        case 1:
+                            bundle.putString("tipoRelatório", "Receita");
+                            bundle.putString("Título", "Receitas " + Utilidade.getMes() + "/" + Utilidade.getAno());
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                            //       finish();
+                            break;
+                        case 2:
+                            bundle.putString("tipoRelatório", "Despesa");
+                            bundle.putString("Título", "Despesas " + Utilidade.getMes() + "/" + Utilidade.getAno());
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                            //      finish();
+                            break;
+                        case 3:
+                            bundle.putString("tipoRelatório", "Geral");
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                            //         finish();
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         });
@@ -113,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
     private void carregarFloatingButton() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
-            Intent intent;
             @Override
             public void onClick(View view) {
                 intent = new Intent(getBaseContext(), CadtransacaoActivity.class);

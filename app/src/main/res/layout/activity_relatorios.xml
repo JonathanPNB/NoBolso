@@ -69,12 +69,12 @@
             android:layout_height="wrap_content"
             android:text="Categoria"
             android:id="@+id/textView4"
-            android:layout_gravity="center_vertical"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:gravity="left" />
+            android:gravity="start"
+            android:layout_gravity="center_vertical" />
 
         <Spinner
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:id="@+id/spinner4"
             android:clickable="true"
@@ -116,8 +116,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Gerar Relatório"
-            android:id="@+id/button2"
-            android:layout_weight="1" />
+            android:id="@+id/button_geraRelatorio"
+            android:layout_weight="1"
+            android:onClick="onClick" />
     </LinearLayout>
 
     <LinearLayout

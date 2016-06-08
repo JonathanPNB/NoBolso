@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bright_pink">#FF007F</color>
+    <color name="red">#FF0000</color>
+    <color name="orange">#FF7F00</color>
+    <color name="yellow">#FFD000</color>
+    <color name="chartreuse">#7FFF00</color>
+    <color name="green">#00FF00</color>
+    <color name="spring_green">#00FF7F</color>
+    <color name="cyan">#00FFFF</color>
+    <color name="azure">#007FFF</color>
+    <color name="blue">#0000FF</color>
+    <color name="violet">#7F00FF</color>
+    <color name="magenta">#FF00FF</color>
+
+    <color name="ingr_red1">#FFCC0000</color>
+    <color name="ingr_orange1">#FFED5F21</color>
+    <color name="ingr_yellow1">#FFFAE300</color>
+    <color name="ingr_green1">#FF5B9C0A</color>
+    <color name="ingr_blue1">#FF0A0D9C</color>
+    <color name="ingr_violet1">#FF990A9C</color>
+    <color name="ingr_red2">#FFFFCCCC</color>
+    <color name="ingr_orange2">#FFFFEACC</color>
+    <color name="ingr_yellow2">#FFFFFECC</color>
+    <color name="ingr_green2">#FFC7F5C4</color>
+    <color name="ingr_blue2">#FFC4DAF4</color>
+    <color name="ingr_violet2">#FFE1C4F4</color>
+</resources>

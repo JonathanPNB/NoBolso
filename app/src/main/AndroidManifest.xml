@@ -18,18 +18,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.ListUserActivity"
-            android:label="@string/title_activity_List" />
-        <activity
-            android:name=".adapter.ImageAdapter1Activity"
-            android:label="@string/title_activity_tela1" />
-        <activity
-            android:name=".adapter.ImageAdapter2Activity"
-            android:label="@string/title_activity_tela2" />
-        <activity
             android:name=".activity.CadtransacaoActivity"
             android:label="@string/title_activity_cadtransacao"
-            android:parentActivityName=".activity.MainActivity">
+            android:parentActivityName=".activity.MainActivity"
+            android:windowSoftInputMode="stateHidden">
             //Usado para o botão voltar da ActionBar
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -49,10 +41,6 @@
             android:parentActivityName=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.dbteste"
-            android:label="@string/title_activity_dbteste"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".activity.ListaTransacoesActivity"
             android:label="@string/title_activity_lista_transacoes"
             android:parentActivityName=".activity.MainActivity">
@@ -63,10 +51,30 @@
         <activity
             android:name=".activity.CadcategoriaActivity"
             android:label="@string/title_activity_cadcategoria"
-            android:parentActivityName=".activity.MainActivity"/>
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".activity.MainActivity" />
+            android:parentActivityName=".activity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activity.ListaTipoTransacao"
+            android:label="@string/title_activity_lista_tipo_transacao"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.Calendario"
+            android:label="@string/title_activity_calendario"
+            android:parentActivityName=".activity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity" />
+        </activity>
+        <activity android:name=".activity.GraficoActivity"
+            android:label="@string/title_activity_grafico"
+            android:parentActivityName=".activity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
