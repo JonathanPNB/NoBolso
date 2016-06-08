@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="E:\Android\Projetos\NoBolso\HoloGraphLibrary\assets"/><source path="E:\Android\Projetos\NoBolso\HoloGraphLibrary\build\generated\assets\shaders\debug"/></dataSet><dataSet config="debug"><source path="E:\Android\Projetos\NoBolso\HoloGraphLibrary\src\debug\assets"/></dataSet></merger>
