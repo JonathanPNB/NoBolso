@@ -30,8 +30,6 @@ public class ListaTransacoesActivity extends AppCompatActivity {
     TextView tvReceita, tvDespesa;
 
     TransacaoDAO tDAO;
- /*   BDCore bd;
-    Bundle bundle = new Bundle();*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +42,13 @@ public class ListaTransacoesActivity extends AppCompatActivity {
         listReceitas = (ListView) findViewById(R.id.listView);
         listDespesas = (ListView) findViewById(R.id.listView2);
 
-        String tipoRelatorio = null, tituloActivity = null;
+        String tipoRelatorio = null;
+        String tituloActivity = null;
+        String categoriaSel = null;
+        String relatorioLista = null;
+        int diaSel = 0;
+        int mesSel = 0;
+        int anoSel = 0;
         Bundle extras = getIntent().getExtras();
 
         if (getIntent().hasExtra("tipoRelatório")) {
@@ -53,6 +57,23 @@ public class ListaTransacoesActivity extends AppCompatActivity {
         if (getIntent().hasExtra("Título")) {
             tituloActivity = extras.getString("Título");
         }
+        if(getIntent().hasExtra("diaSel")) {
+            diaSel = extras.getInt("diaSel");
+        }
+        if(getIntent().hasExtra("mesSel")) {
+            mesSel = extras.getInt("mesSel");
+        }
+        if(getIntent().hasExtra("anoSel")) {
+            anoSel = extras.getInt("anoSel");
+        }
+        if(getIntent().hasExtra("categoriaSel")) {
+            categoriaSel = extras.getString("categoriaSel");
+        }
+        if(getIntent().hasExtra("relatorioLista")) {
+            relatorioLista = extras.getString("relatorioLista");
+        }
+
+        Log.e("extras",getIntent().getExtras().toString());
 
         tDAO = new TransacaoDAO(this);
 
@@ -64,22 +85,46 @@ public class ListaTransacoesActivity extends AppCompatActivity {
                     Utilidade.getAno())));
             listDespesas.setAdapter(new TransacaoAdapter(this, tDAO.transacoesMes("Despesa", Utilidade.getMes(),
                     Utilidade.getAno())));
+        } else if (tipoRelatorio.equalsIgnoreCase("tData")) {
+            setTitle(tituloActivity);
+            listReceitas.setAdapter(new TransacaoAdapter(this, tDAO.transacoesDia("Receita", diaSel, mesSel, anoSel)));
+            listDespesas.setAdapter(new TransacaoAdapter(this, tDAO.transacoesDia("Despesa", diaSel, mesSel, anoSel)));
         } else {
             setTitle(tituloActivity);
             tvDespesa.setVisibility(View.GONE);
             tvReceita.setVisibility(View.GONE);
-            if (tipoRelatorio.equals("Receita")) {
+            if (tipoRelatorio.equalsIgnoreCase("Receita")) {
                 listDespesas.setVisibility(View.GONE);
                 listReceitas.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT));
                 listReceitas.setAdapter(new TransacaoAdapter(this, tDAO.transacoesMes(tipoRelatorio, Utilidade.getMes(),
                         Utilidade.getAno())));
-            } else if (tipoRelatorio.equals("Despesa")) {
+            } else if (tipoRelatorio.equalsIgnoreCase("Despesa")) {
                 listReceitas.setVisibility(View.GONE);
                 listDespesas.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT));
                 listDespesas.setAdapter(new TransacaoAdapter(this, tDAO.transacoesMes(tipoRelatorio, Utilidade.getMes(),
                         Utilidade.getAno())));
+            } else {//todas as transacoes - relatorios
+                if (relatorioLista.equalsIgnoreCase("receita")) {
+                    tvDespesa.setVisibility(View.GONE);
+                    listDespesas.setVisibility(View.GONE);
+                    listReceitas.setAdapter(new TransacaoAdapter(this, tDAO.relatorioTransacao("Receita", mesSel,
+                            anoSel, categoriaSel)));
+
+                } else if (relatorioLista.equalsIgnoreCase("despesa")) {
+                    tvReceita.setVisibility(View.GONE);
+                    listReceitas.setVisibility(View.GONE);
+                    listDespesas.setAdapter(new TransacaoAdapter(this, tDAO.relatorioTransacao("Despesa", mesSel,
+                            anoSel, categoriaSel)));
+                } else {
+                    tvDespesa.setVisibility(View.VISIBLE);
+                    tvReceita.setVisibility(View.VISIBLE);
+                    listReceitas.setAdapter(new TransacaoAdapter(this, tDAO.relatorioTransacao("Receita", mesSel,
+                            anoSel, categoriaSel)));
+                    listDespesas.setAdapter(new TransacaoAdapter(this, tDAO.relatorioTransacao("Despesa", mesSel,
+                            anoSel, categoriaSel)));
+                }
             }
         }
 
@@ -110,7 +155,7 @@ public class ListaTransacoesActivity extends AppCompatActivity {
                 (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
         String nomeSelecionado = (String) selectedListViewAdapter.getItem(info.position);
-        //  int idCategoria = catDAO.buscaIdCategoria(nomeSelecionado);
+        //  int idCategoria = catDAO.buscaId(nomeSelecionado);
         Log.e("INFO", "onContextItemSelected aberto. " + nomeSelecionado + " / " + item.toString());
 
         switch (item.getItemId()) {

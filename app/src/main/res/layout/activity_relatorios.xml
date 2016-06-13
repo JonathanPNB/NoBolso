@@ -24,7 +24,7 @@
         <Spinner
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/spinner_tipo_relatorio"
+            android:id="@+id/spinner_tipo_filtro"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/textView_filtrar"
             android:spinnerMode="dropdown" />
@@ -101,7 +101,8 @@
         <Spinner
             android:layout_width="190dp"
             android:layout_height="wrap_content"
-            android:id="@+id/spinner5" />
+            android:id="@+id/spinner_tipo_relatorio"
+            android:spinnerMode="dropdown" />
     </LinearLayout>
 
     <LinearLayout

@@ -16,6 +16,7 @@ import com.echo.holographlibrary.PieSlice;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import unifimes.tcc.nobolso.R;
 import unifimes.tcc.nobolso.adapter.GraficoAdapter;
@@ -41,7 +42,7 @@ public class GraficoActivity extends AppCompatActivity {
         catDAO = new CategoriaDAO(this);
         allColors = this.getResources().getIntArray(R.array.cores);
 
-        String tipoSel = getIntent().getExtras().getString("tipoSel");
+        String filtroSel = getIntent().getExtras().getString("filtroSel");
         int mesSel = getIntent().getExtras().getInt("mesSel");
         int anoSel = getIntent().getExtras().getInt("anoSel");
         String categoriaSel = getIntent().getExtras().getString("categoriaSel");
@@ -50,7 +51,7 @@ public class GraficoActivity extends AppCompatActivity {
         textoErro = (TextView) findViewById(R.id.textView_erroGrafico);
         listView = (ListView) findViewById(R.id.listView3);
 
-        this.geraGrafico(tDAO.relatorioTransacao(tipoSel, mesSel, anoSel, categoriaSel), tipoSel);
+        this.geraGrafico(tDAO.relatorioTransacao(filtroSel, mesSel, anoSel, categoriaSel)/*, tipoSel*/);
     }
 
     @Override
@@ -77,55 +78,91 @@ public class GraficoActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void geraGrafico(ArrayList<Transacao> lista, String tipoTransacao) {
+    private void geraGrafico(ArrayList<Transacao> lista/*, String tipoTransacao*/) {
         pg.setVisibility(View.GONE);
 
         if (lista.size() > 0) {
             pg.setVisibility(View.VISIBLE);
-            this.geraPieGraph(lista, tipoTransacao);
+            this.geraPieGraph(lista/*, tipoTransacao*/);
         } else {
             textoErro.setVisibility(View.VISIBLE);
+            return;
         }
     }
 
-    private void geraPieGraph(ArrayList<Transacao> lista, String tipoTransacao) {//FUNCIONANDO
-        ArrayList<String> Categorias = new ArrayList<>();
-        ArrayList<BigDecimal> Valores = new ArrayList<>();
-        if (tipoTransacao.equalsIgnoreCase("Todos")) {
-            Categorias.add("Despesa");
-            Categorias.add("Receita");
-            for (int i = 0; i < 2; i++) {//gerar o gráfico
-                float valorTransacao = 0;
-                valorTransacao += lista.get(i).getValor().floatValue();
-                PieSlice slice = new PieSlice();
-                if (i == 0) {//pegar apenas despesas
-                    valorTransacao *= -1;
+    private void geraPieGraph(ArrayList<Transacao> lista/*, String tipoTransacao*/) {//FUNCIONANDO
+        Log.e("geraPieGraph", "Lista = " + lista.toString());
+        TreeMap<String, BigDecimal> listaValores = new TreeMap<>();
+      /*  if (tipoTransacao.equalsIgnoreCase("Todos")) {
+            float valorReceitas = 0;
+            float valorDespesas = 0;
+
+            for (int i = 0; i < lista.size(); i++) {
+                if (lista.get(i).getValor().compareTo(BigDecimal.ZERO) < 0) {//despesas
+                    valorDespesas += lista.get(i).getValor().floatValue();
+                } else {
+                    valorReceitas += lista.get(i).getValor().floatValue();
                 }
 
-                slice.setColor(allColors[i]);
-                slice.setValue(valorTransacao);
-                Valores.add(new BigDecimal(String.valueOf(valorTransacao)));
-                pg.addSlice(slice);
-                Log.e("geraPieGraph", "slice[" + i + "] = " + "-" + slice.getValue());
+                if (i == lista.size() - 1) {
+                    PieSlice sliceDespesa = new PieSlice();
+                    PieSlice sliceReceita = new PieSlice();
+                    valorDespesas *= -1;
+                    listaValores.put("Despesa", new BigDecimal(String.valueOf(valorDespesas)));
+                    listaValores.put("Receita", new BigDecimal(String.valueOf(valorReceitas)));
+                    sliceDespesa.setColor(allColors[0]);
+                    sliceReceita.setColor(allColors[1]);
+                    sliceDespesa.setValue(valorDespesas);
+                    sliceReceita.setValue(valorReceitas);
 
+                    pg.addSlice(sliceDespesa);
+                    pg.addSlice(sliceReceita);
+
+                    Log.e("geraPieGraph", "sliceDespesa= " + sliceDespesa.getValue() + " / sliceReceita= " + sliceReceita.getValue());
+                }
             }
-        } else {
-            for (int i = 0; i < lista.size(); i++) {//gerar o gráfico
-                float valorTransacao = 0;
-                valorTransacao += lista.get(i).getValor().floatValue();
+        } else {*/
+       //     Log.e("geraPieGraph", tipoTransacao + " - " + lista.size());
+            float valorTransacao;
+            for (int i = 0; i < lista.size(); i++) {
+                valorTransacao = lista.get(i).getValor().floatValue();
                 if (valorTransacao < 0) {
                     valorTransacao *= -1;
                 }
-                Categorias.clear();
-          //      Categorias.add("Despesa");
-            //    Categorias.add("Receita");
-                PieSlice slice = new PieSlice();
-                slice.setColor(allColors[i]);
-                slice.setValue(valorTransacao);
-                pg.addSlice(slice);
+                if (!listaValores.containsKey(lista.get(i).getCategoria())) {//se a categoria não estiver no map é adicionada
+                    listaValores.put(lista.get(i).getCategoria(), new BigDecimal(String.valueOf(valorTransacao)));
+                } else {//se estiver o valor é incrementado
+                    listaValores.put(lista.get(i).getCategoria(),
+                            listaValores.get(lista.get(i).getCategoria()).add(new BigDecimal(String.valueOf(valorTransacao))));
+                }
+                Log.e("valcategoria", lista.get(i).getCategoria() + " = " + new BigDecimal(String.valueOf(valorTransacao)) +
+                        " / lista.size = " + lista.size());
             }
+            int quantidadeChaves = 0;
+            for (String chave : listaValores.keySet()) {
+                if (chave != null) {
+                    Log.e("valcategoria2", chave + " = " + listaValores.get(chave));
+                    PieSlice slice = new PieSlice();
+                    slice.setColor(allColors[quantidadeChaves]);
+                    slice.setValue(listaValores.get(chave).floatValue());
+                    pg.addSlice(slice);
+                }
+                quantidadeChaves++;
+            }
+    //    }
+
+        if (allColors.length > 0 && !listaValores.isEmpty()) {
+            for (String chave : listaValores.keySet()) {
+                if (chave != null) {
+                    Log.e("listaValores", "Chave: " + chave);
+                }
+            }
+            listView.setAdapter(new GraficoAdapter(this, allColors, listaValores));
+        } else {
+            pg.setVisibility(View.GONE);
+            textoErro.setVisibility(View.VISIBLE);
+            return;
         }
-        listView.setAdapter(new GraficoAdapter(this, allColors, Categorias, Valores));
     }
 
     @Override

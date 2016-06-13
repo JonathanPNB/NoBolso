@@ -73,6 +73,6 @@ public class Transacao {
     @Override
     public String toString() {
         return getId() + " - " + getTipo() + " - " + getDescricao() + " - " + getCategoria()
-                + " - " + getData() + " - " + getValor();
+                + " - " + getData() + " - " + getValor() + "\n";
     }
 }

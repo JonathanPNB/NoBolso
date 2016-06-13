@@ -61,7 +61,7 @@
             android:label="@string/title_activity_lista_tipo_transacao"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.Calendario"
+            android:name=".activity.CalendarioActivity"
             android:label="@string/title_activity_calendario"
             android:parentActivityName=".activity.MainActivity">
             <meta-data

@@ -12,8 +12,11 @@ import android.widget.EditText;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import unifimes.tcc.nobolso.entity.Transacao;
 
@@ -219,34 +222,20 @@ public class Utilidade {
 
     public static BigDecimal calculaPorcentagem(BigDecimal valorItem, BigDecimal valorTotal) {
         BigDecimal resultado = valorItem.multiply(new BigDecimal("100")).divide(valorTotal, BigDecimal.ROUND_HALF_UP);
-        Log.e("calculaPorcentagem",valorItem+" - "+valorTotal+" - "+resultado);
+    //    Log.e("calculaPorcentagem",valorItem+" - "+valorTotal+" - "+resultado);
         return resultado;
     }
 
+    public static String formataData(String formatoAntigo, String formatoNovo, String data) {
+        SimpleDateFormat sdf = new SimpleDateFormat(formatoAntigo);
+        Date dataTransacao = null;
+        try {
+            dataTransacao = sdf.parse(data);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        sdf.applyPattern(formatoNovo);
+        return sdf.format(dataTransacao);
+    }
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

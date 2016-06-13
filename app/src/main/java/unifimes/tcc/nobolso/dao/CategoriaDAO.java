@@ -65,7 +65,7 @@ public class CategoriaDAO {
         return list;
     }
 
-    public int buscaIdCategoria(String categoria) {//se id > -1 categoria existe no BD
+    public int buscaId(String categoria) {//se id > -1 categoria existe no BD
         String selectQuery;
         int resultado;
 
@@ -80,12 +80,12 @@ public class CategoriaDAO {
             resultado = -1;
         }
 
-       //       Log.e("buscaIdCategoria",String.valueOf(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID))));
+       //       Log.e("buscaId",String.valueOf(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID))));
         cursor.close();
         return resultado;
     }
 
-    public String buscaNomeCategoria(int id) {
+    public String buscaNome(int id) {
         String selectQuery;
         String categoria;
 
@@ -101,16 +101,16 @@ public class CategoriaDAO {
             categoria = "";
         }
 
-    //    Log.e("buscaNomeCategoria", cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DESCRICAO)));
+    //    Log.e("buscaNome", cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DESCRICAO)));
         cursor.close();
         return categoria;
     }
 
     public void salvar(Context context, Categoria cat) {
-        ContentValues novosValores = contentValuesCategoria(cat);
-        int idCategoria = this.buscaIdCategoria(cat.getDescricao());
+        ContentValues novosValores = contentValues(cat);
+        int idCategoria = this.buscaId(cat.getDescricao());
         if (idCategoria >= 0) {//CATEGORIA JA EXISTE
-            ContentValues oldValores = contentValuesCategoria(this.buscaObjCategoria(idCategoria));//VERIFICA OS VALORES Q JA ESTAO GRAVADOS
+            ContentValues oldValores = contentValues(this.buscaObj(idCategoria));//VERIFICA OS VALORES Q JA ESTAO GRAVADOS
 
             if (!oldValores.getAsBoolean(BDCore.COLUNA_VISIVEL)) {
                 Toast.makeText(context, "Categoria já cadastrada.", Toast.LENGTH_SHORT).show();
@@ -138,7 +138,7 @@ public class CategoriaDAO {
         }
     }
 
-    public Categoria buscaObjCategoria(int id) {
+    public Categoria buscaObj(int id) {
         Categoria cat = new Categoria();
         String selectQuery;
 
@@ -168,7 +168,7 @@ public class CategoriaDAO {
     }
 
     public void remover(int id) {//A categoria não pode ser deletada do bd
-        ContentValues valores = contentValuesCategoria(this.buscaObjCategoria(id));
+        ContentValues valores = contentValues(this.buscaObj(id));
         try {
             bd.update(BDCore.NOME_TABELA_CATEGORIA, valores, BDCore.COLUNA_ID + " =  ?", new String[]{String.valueOf(id)});
             Log.e("INFO", "Categoria excluida com sucesso. " + valores.toString());
@@ -179,7 +179,7 @@ public class CategoriaDAO {
     }
 
     public void alterar(Context context, Categoria cat) {
-        ContentValues novosValores = contentValuesCategoria(cat);
+        ContentValues novosValores = contentValues(cat);
         if (cat.getId() >= 0) {//CATEGORIA JA EXISTE
             try {
                 bd.update(BDCore.NOME_TABELA_CATEGORIA, novosValores, BDCore.COLUNA_ID + " =  ?",
@@ -194,7 +194,7 @@ public class CategoriaDAO {
         }
     }
 
-    private ContentValues contentValuesCategoria(Categoria cat) {
+    private ContentValues contentValues(Categoria cat) {
         ContentValues values = new ContentValues();
         int visivel;
         values.put(BDCore.COLUNA_DESCRICAO, cat.getDescricao());

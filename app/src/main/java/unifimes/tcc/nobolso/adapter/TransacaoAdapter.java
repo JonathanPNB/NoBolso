@@ -64,6 +64,9 @@ public class TransacaoAdapter extends BaseAdapter {
         TextView categoria = (TextView) layout.findViewById(R.id.textView_Categoria);
         categoria.setText(transacao.getCategoria());
 
+        TextView data = (TextView) layout.findViewById(R.id.textView_dataTransacao);
+        data.setText(Utilidade.formataData("yyyy-MM-dd","dd/MM/yyyy",transacao.getData()));
+
         TextView valor = (TextView) layout.findViewById(R.id.textView_Valor);
         valor.setText(String.valueOf("R$ " + Utilidade.formataMoeda(transacao.getValor())));
         if(idReceita != parent.getId()) {

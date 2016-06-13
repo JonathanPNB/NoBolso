@@ -34,7 +34,7 @@ public class TransacaoDAO {
         this.ctx = context;
     }
 
-    public void salvarTransacao(Transacao tran) {
+    public void salvar(Transacao tran) {
         ContentValues values = contentValuesTransacao(tran);
         //     util = new Utilidade(ctx);
 
@@ -94,7 +94,7 @@ public class TransacaoDAO {
                     tr.setDescricao(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DESCRICAO)));
                     tr.setValor(new BigDecimal(String.valueOf(cursor.getDouble(cursor.getColumnIndex(BDCore.COLUNA_VALOR)))));
                     tr.setData(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DATA)));
-                    tr.setCategoria(catDAO.buscaNomeCategoria(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID_CATEGORIA))));
+                    tr.setCategoria(catDAO.buscaNome(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID_CATEGORIA))));
 
                     list.add(tr);
                     Log.e("[BD]Buscar Transação", tr.toString());
@@ -129,7 +129,7 @@ public class TransacaoDAO {
                 transacao.setDescricao(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DESCRICAO)));
                 transacao.setValor(new BigDecimal(String.valueOf(cursor.getDouble(cursor.getColumnIndex(BDCore.COLUNA_VALOR)))));
                 transacao.setData(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DATA)));
-                transacao.setCategoria(catDAO.buscaNomeCategoria(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID_CATEGORIA))));
+                transacao.setCategoria(catDAO.buscaNome(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID_CATEGORIA))));
 
                 list.add(transacao);
                 Log.e("[BD]Listar Transação", String.valueOf(cursor.getInt(0)) + " / " + cursor.getDouble(cursor.getColumnIndex("valor")) + " / " +
@@ -146,14 +146,14 @@ public class TransacaoDAO {
         ArrayList<Transacao> list = new ArrayList<>();
         catDAO = new CategoriaDAO(ctx);
         String selectQuery;
-        String[] Tabelas = {BDCore.NOME_TABELA_DESPESA, BDCore.NOME_TABELA_RECEITA};//despesa = 0 / receita = 1
+        // String[] Tabelas = {BDCore.NOME_TABELA_DESPESA, BDCore.NOME_TABELA_RECEITA};//despesa = 0 / receita = 1
         String nomeTransacao = "";
         Cursor cursor;
         String dataInicial, dataFinal;
 
         if (tipoRelatorio.equalsIgnoreCase("Despesa")) {//despesa
             nomeTransacao = "despesa";
-        } else if(tipoRelatorio.equalsIgnoreCase("Receita")) {//receita
+        } else if (tipoRelatorio.equalsIgnoreCase("Receita")) {//receita
             nomeTransacao = "receita";
         }
 
@@ -171,37 +171,42 @@ public class TransacaoDAO {
         }
 
         int idCategoria;
-        if (!categoria.equals("Todas")) {
-            idCategoria = catDAO.buscaIdCategoria(categoria);
+        if (!categoria.equalsIgnoreCase("Todas")) {
+            idCategoria = catDAO.buscaId(categoria);
+            selectQuery = "SELECT * FROM " + nomeTransacao + " WHERE " + BDCore.COLUNA_ID_CATEGORIA + " = " + idCategoria +
+                    " and " + BDCore.COLUNA_DATA + " between '" + dataInicial + "' " +
+                    "AND '" + dataFinal + "'";
+        } else {
+            selectQuery = "SELECT * FROM " + nomeTransacao + " WHERE " + BDCore.COLUNA_DATA + " between '" + dataInicial + "' " +
+                    "AND '" + dataFinal + "'";
         }
 
         Log.e("relatorioTransacao", "Args: " + tipoRelatorio + " - " + mes + "/" + ano + " - " + categoria);
 
-        if (!tipoRelatorio.equalsIgnoreCase("Todos")) {//despesa ou receita
-            //data between '2016-05-01' and '2016-05-31'
-            selectQuery = "SELECT * FROM " + nomeTransacao + " WHERE " + BDCore.COLUNA_DATA + " between '" + dataInicial + "' " +
-                    "AND '" + dataFinal + "'";
+        //  if (!tipoRelatorio.equalsIgnoreCase("Todos")) {//despesa ou receita
+        //data between '2016-05-01' and '2016-05-31'
 
-            String[] colunas = new String[]{BDCore.COLUNA_ID, BDCore.COLUNA_DESCRICAO, BDCore.COLUNA_VALOR,
-                    BDCore.COLUNA_DATA, BDCore.COLUNA_ID_CATEGORIA};
-            Log.e("relatorioTransacao", nomeTransacao + " - " + selectQuery);
-            cursor = bd.rawQuery(selectQuery, null);
 
-            if (cursor.getCount() > 0) {
-                cursor.moveToFirst();
-                do {
-                    Transacao transacao = new Transacao();
-                    transacao.setId(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID)));
-                    transacao.setDescricao(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DESCRICAO)));
-                    transacao.setValor(new BigDecimal(String.valueOf(cursor.getDouble(cursor.getColumnIndex(BDCore.COLUNA_VALOR)))));
-                    transacao.setData(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DATA)));
-                    transacao.setCategoria(catDAO.buscaNomeCategoria(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID_CATEGORIA))));
+        //     String[] colunas = new String[]{BDCore.COLUNA_ID, BDCore.COLUNA_DESCRICAO, BDCore.COLUNA_VALOR,
+        //           BDCore.COLUNA_DATA, BDCore.COLUNA_ID_CATEGORIA};
+        Log.e("relatorioTransacao", nomeTransacao + " - " + selectQuery);
+        cursor = bd.rawQuery(selectQuery, null);
 
-                    list.add(transacao);
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
-        } else {//todas as transacoes
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                Transacao transacao = new Transacao();
+                transacao.setId(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID)));
+                transacao.setDescricao(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DESCRICAO)));
+                transacao.setValor(new BigDecimal(String.valueOf(cursor.getDouble(cursor.getColumnIndex(BDCore.COLUNA_VALOR)))));
+                transacao.setData(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DATA)));
+                transacao.setCategoria(catDAO.buscaNome(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID_CATEGORIA))));
+
+                list.add(transacao);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+      /*  } else {//todas as transacoes
 
             for (int i = 0; i < Tabelas.length; i++) {
                 selectQuery = "SELECT * FROM " + Tabelas[i] + " WHERE " + BDCore.COLUNA_DATA + " between '" + dataInicial + "' " +
@@ -228,7 +233,41 @@ public class TransacaoDAO {
                 }
                 cursor.close();
             }
-        }
+        }*/
+        return list;
+    }
+
+    public ArrayList<Transacao> transacoesDia(String categoria, int dia, int mes, int ano) {
+        ArrayList<Transacao> list = new ArrayList<>();
+        String selectQuery;
+        catDAO = new CategoriaDAO(ctx);
+        String[] periodo = new String[]{Utilidade.formataNumero(dia, 2), Utilidade.formataNumero(mes, 2), String.valueOf(ano)};
+        Cursor cursor;
+
+        Log.e("transacoesDia", "Args: " + dia + "/" + mes + "/" + ano);
+
+            selectQuery = "SELECT * FROM " + categoria + " WHERE strftime('%d', " + BDCore.COLUNA_DATA + ") = ? " +
+                    "AND strftime('%m', " + BDCore.COLUNA_DATA + ") = ? " + "AND strftime('%Y', " + BDCore.COLUNA_DATA + ") = ?";
+
+            cursor = bd.rawQuery(selectQuery, periodo);
+
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                do {
+                    Transacao transacao = new Transacao();
+                    transacao.setId(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID)));
+                    transacao.setDescricao(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DESCRICAO)));
+                    transacao.setValor(new BigDecimal(String.valueOf(cursor.getDouble(cursor.getColumnIndex(BDCore.COLUNA_VALOR)))));
+                    transacao.setData(cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DATA)));
+                    transacao.setCategoria(catDAO.buscaNome(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID_CATEGORIA))));
+
+                    list.add(transacao);
+                    Log.e("[BD]Listar Transação", String.valueOf(cursor.getInt(0)) + " / " + cursor.getDouble(cursor.getColumnIndex("valor")) + " / " +
+                            cursor.getString(cursor.getColumnIndex("data")) + " / " + cursor.getString(cursor.getColumnIndex("descricao")) + " / " +
+                            cursor.getInt(cursor.getColumnIndex("id_categoria")));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
         return list;
     }
 
@@ -238,14 +277,8 @@ public class TransacaoDAO {
         values.put(BDCore.COLUNA_VALOR, String.valueOf(tran.getValor()));
         values.put(BDCore.COLUNA_DATA, tran.getData());
         values.put(BDCore.COLUNA_DESCRICAO, tran.getDescricao());
-        values.put(BDCore.COLUNA_ID_CATEGORIA, catDAO.buscaIdCategoria(tran.getCategoria()));//pegar o nome da categoria e buscar seu id na tabela Categorias
+        values.put(BDCore.COLUNA_ID_CATEGORIA, catDAO.buscaId(tran.getCategoria()));//pegar o nome da categoria e buscar seu id na tabela Categorias
 
-        //   catDAO.fecharConexao();
         return values;
     }
-/*
-    public void fecharConexao() {
-        if(bd != null && bd.isOpen())
-            bd.close();
-    }*/
 }

@@ -34,4 +34,12 @@
         android:layout_alignParentRight="true"
         android:text="TextView" />
 
+    <TextView
+        android:id="@+id/textView_dataTransacao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_alignTop="@+id/textView_Categoria"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

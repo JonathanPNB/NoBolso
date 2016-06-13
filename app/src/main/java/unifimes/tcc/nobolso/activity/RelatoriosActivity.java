@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,17 +26,17 @@ public class RelatoriosActivity extends AppCompatActivity {
 
     List<String> listaAnos = new ArrayList<>();
     List<String> listaCategorias = new ArrayList<>();
+    List<String> listaFiltros = new ArrayList<>();
     CategoriaDAO catDAO;
     TransacaoDAO tDAO;
     boolean displayInicial = true;
-   // String categoriaSelecionada;
     Bundle bundle = new Bundle();
 
-    Spinner spinnerTipoRelatorio;
+    Spinner spinnerTipoFiltro;
     Spinner spinnerCategoria;
     Spinner spinnerAno;
     Spinner spinnerMes;
-    Spinner spinnerTipo;
+    Spinner spinnerTipoRelatorio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,14 +44,13 @@ public class RelatoriosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_relatorios);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//habilita botão voltar na ActionBar
 
-        spinnerTipoRelatorio = (Spinner) findViewById(R.id.spinner_tipo_relatorio);
+        spinnerTipoFiltro = (Spinner) findViewById(R.id.spinner_tipo_filtro);
         spinnerAno = (Spinner) findViewById(R.id.spinner3);
         spinnerMes = (Spinner) findViewById(R.id.spinner2);
-        spinnerTipo = (Spinner) findViewById(R.id.spinner5);
+        spinnerTipoRelatorio = (Spinner) findViewById(R.id.spinner_tipo_relatorio);
         spinnerCategoria = (Spinner) findViewById(R.id.spinner4);
 
         tDAO = new TransacaoDAO(this);
-
         popSpinner();
     }
 
@@ -82,29 +82,42 @@ public class RelatoriosActivity extends AppCompatActivity {
     public void onClick(View v) {
         Intent intent;
 
+        int filtroSel = spinnerTipoFiltro.getSelectedItemPosition();
         int tipoSel = spinnerTipoRelatorio.getSelectedItemPosition();
-        int modoSel = spinnerTipo.getSelectedItemPosition();
         int mesSel = spinnerMes.getSelectedItemPosition();
         int anoSel = spinnerAno.getSelectedItemPosition();
         int categoriaSel = spinnerCategoria.getSelectedItemPosition();
 
         switch (v.getId()) {
             case R.id.button_geraRelatorio:
-                bundle.putString("tipoSel", spinnerTipoRelatorio.getItemAtPosition(tipoSel).toString());
+                if (mesSel > 0 && anoSel == 0) {
+                    Toast.makeText(RelatoriosActivity.this, R.string.erro_selecione_ano, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                bundle.putString("filtroSel", spinnerTipoFiltro.getItemAtPosition(filtroSel).toString());
                 bundle.putInt("mesSel", mesSel);
-                if(anoSel > 0) {
+                if (anoSel > 0) {
                     bundle.putInt("anoSel", Integer.parseInt(spinnerAno.getItemAtPosition(anoSel).toString()));
                 } else {
                     bundle.putInt("anoSel", anoSel);
                 }
 
+               // bundle.putString("tipoSel", spinnerTipoRelatorio.getItemAtPosition(tipoSel).toString());
                 bundle.putString("categoriaSel", spinnerCategoria.getItemAtPosition(categoriaSel).toString());
-                bundle.putString("tipoRelatório", spinnerTipoRelatorio.getItemAtPosition(tipoSel).toString());
 
-                if (modoSel == 0) {//gráfico
+                if (tipoSel == 0) {//gráfico
                     intent = new Intent(this, GraficoActivity.class);
                     intent.putExtras(bundle);
                 } else {//relatório em lista
+                    bundle.putString("Título", "Visualizar");
+                    bundle.putString("tipoRelatório", "lista");
+                    bundle.putString("relatorioLista", spinnerTipoFiltro.getItemAtPosition(filtroSel).toString());
+                 /*   bundle.putInt("mesSel", mesSel);
+                    if (anoSel > 0) {
+                        bundle.putInt("anoSel", Integer.parseInt(spinnerAno.getItemAtPosition(anoSel).toString()));
+                    } else {
+                        bundle.putInt("anoSel", anoSel);
+                    }*/
                     intent = new Intent(this, ListaTransacoesActivity.class);
                     intent.putExtras(bundle);
                 }
@@ -126,13 +139,17 @@ public class RelatoriosActivity extends AppCompatActivity {
 
     public void popSpinner() {
         String categoria;
-        catDAO = new CategoriaDAO(getBaseContext());
+        catDAO = new CategoriaDAO(getApplicationContext());
 
         //popular o Spinner "Filtrar por"
-        ArrayAdapter<String> spntipoAdapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_item,
-                getResources().getStringArray(R.array.array_tipoFiltroRelatorio));
+       String[] tiposFiltros = getResources().getStringArray(R.array.array_tipoFiltroRelatorio);
+        for (int i = 0; i < tiposFiltros.length; i++) {
+            listaFiltros.add(tiposFiltros[i]);
+        }
+        final ArrayAdapter<String> spntipoAdapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_item,
+                listaFiltros);
         spntipoAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-        spinnerTipoRelatorio.setAdapter(spntipoAdapter);
+        spinnerTipoFiltro.setAdapter(spntipoAdapter);
 
         //popular o Spinner "Ano"
         listaAnos.add(0, "Todos");
@@ -154,7 +171,7 @@ public class RelatoriosActivity extends AppCompatActivity {
         ArrayAdapter<String> spinner5adap = new ArrayAdapter<>(this, R.layout.spinner_dropdown_item,
                 getResources().getStringArray(R.array.array_formatoRelatorio));
         spinner5adap.setDropDownViewResource(R.layout.spinner_dropdown_item);
-        spinnerTipo.setAdapter(spinner5adap);
+        spinnerTipoRelatorio.setAdapter(spinner5adap);
 
         //popular o Spinner "Categorias"
         listaCategorias.add(0, "Todas");
@@ -168,28 +185,72 @@ public class RelatoriosActivity extends AppCompatActivity {
         spinner4adap.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerCategoria.setAdapter(spinner4adap);
 
-        spinnerTipoRelatorio.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerTipoFiltro.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(!displayInicial) {
+                if (!displayInicial) {
                     String categoria;
-                    int tipo_relatorio;
+                    int tipo_filtro;
                     String tipoSelecionado = parent.getItemAtPosition(position).toString();
-                    if (tipoSelecionado.equalsIgnoreCase(getResources().getStringArray(R.array.array_tipoFiltroRelatorio)[1])) { //despesa
-                        tipo_relatorio = 0;
-                    } else if (tipoSelecionado.equalsIgnoreCase(getResources().getStringArray(R.array.array_tipoFiltroRelatorio)[2])) {//receita
-                        tipo_relatorio = 1;
+                    if (tipoSelecionado.equalsIgnoreCase(getResources().getStringArray(R.array.array_tipoFiltroRelatorio)[0])) { //despesa
+                        tipo_filtro = 0;
+                        spinnerCategoria.setClickable(true);
+                        spinnerCategoria.setEnabled(true);
+                    } else if (tipoSelecionado.equalsIgnoreCase(getResources().getStringArray(R.array.array_tipoFiltroRelatorio)[1])){//receita
+                        tipo_filtro = 1;
+                        spinnerCategoria.setClickable(true);
+                        spinnerCategoria.setEnabled(true);
                     } else {
-                        tipo_relatorio = 2;
+                        tipo_filtro = 2;
+                        spinnerCategoria.setClickable(false);
+                        spinnerCategoria.setEnabled(false);
                     }
+
                     listaCategorias.clear();
                     listaCategorias.add(0, "Todas");
-                    List<Categoria> lista = catDAO.listar(tipo_relatorio);
+                    List<Categoria> lista = catDAO.listar(tipo_filtro);
                     for (int i = 0; i < lista.size(); i++) {
                         categoria = lista.get(i).getDescricao();
                         listaCategorias.add(categoria);
                     }
                     spinner4adap.notifyDataSetChanged();
+                }
+                displayInicial = false;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        spinnerTipoRelatorio.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!displayInicial) {
+                    String tipoSelecionado = parent.getItemAtPosition(position).toString();
+                    if (tipoSelecionado.equalsIgnoreCase("Lista")) {
+                        listaFiltros.clear();
+                        listaFiltros.add(0,"Todos");
+                        String[] tiposFiltros = getResources().getStringArray(R.array.array_tipoFiltroRelatorio);
+                        for (int i = 0; i < tiposFiltros.length; i++) {
+                            listaFiltros.add(tiposFiltros[i]);
+                        }
+                        spinnerCategoria.setClickable(false);
+                        spinnerCategoria.setSelection(0);
+                        spinnerCategoria.setEnabled(false);
+                        spntipoAdapter.notifyDataSetChanged();
+                    } else {
+                        listaFiltros.clear();
+                        String[] tiposFiltros = getResources().getStringArray(R.array.array_tipoFiltroRelatorio);
+                        for (int i = 0; i < tiposFiltros.length; i++) {
+                            listaFiltros.add(tiposFiltros[i]);
+                        }
+                        spinnerCategoria.setClickable(true);
+                        spinnerCategoria.setSelection(0);
+                        spinnerCategoria.setEnabled(true);
+                        spntipoAdapter.notifyDataSetChanged();
+                    }
                 }
                 displayInicial = false;
             }

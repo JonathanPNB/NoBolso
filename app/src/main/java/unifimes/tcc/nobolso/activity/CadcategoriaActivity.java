@@ -88,7 +88,7 @@ public class CadcategoriaActivity extends AppCompatActivity {
 
     public void editarCategoria() {
         setTitle(titulo);
-        final Categoria antigo = catDAO.buscaObjCategoria(idCategoria);
+        final Categoria antigo = catDAO.buscaObj(idCategoria);
 
         btnSalvar.setText("Alterar");
         edtNomeCategoria.setText(antigo.getDescricao());

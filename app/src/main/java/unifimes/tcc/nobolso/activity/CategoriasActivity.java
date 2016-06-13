@@ -95,7 +95,7 @@ public class CategoriasActivity extends AppCompatActivity {
                 (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
         String nomeSelecionado = (String) selectedListViewAdapter.getItem(info.position);
-        int idCategoria = catDAO.buscaIdCategoria(nomeSelecionado);
+        int idCategoria = catDAO.buscaId(nomeSelecionado);
 
         switch (item.getItemId()) {
             case R.id.opcaoEditar:
@@ -192,7 +192,7 @@ public class CategoriasActivity extends AppCompatActivity {
 
 // Create a piece of toast.
                     Toast.makeText(getBaseContext(), "O item está na posição " + position, Toast.LENGTH_SHORT).show();
-                    //          catDAO.deletar(catDAO.buscaIdCategoria(nomeCategoria));
+                    //          catDAO.deletar(catDAO.buscaId(nomeCategoria));
                     //        listaReceitas.remove(position);
            //         alertDialogPersonalizado(position);
                 }

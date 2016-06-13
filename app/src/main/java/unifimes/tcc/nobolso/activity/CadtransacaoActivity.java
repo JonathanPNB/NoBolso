@@ -25,10 +25,7 @@ import android.widget.Toast;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import unifimes.tcc.nobolso.R;
@@ -163,7 +160,7 @@ public class CadtransacaoActivity extends AppCompatActivity {
                 //pega nome pela posição
                 opcao = parent.getItemAtPosition(posicao).toString();
 
-                if (opcao.equals("Receita") || opcao.equals("Despesa")) {//habilitar botoes
+                if (opcao.equalsIgnoreCase("Receita") || opcao.equalsIgnoreCase("Despesa")) {//habilitar botoes
                     ativarComponentes(true);
                     edtValor.requestFocus();
                     new Utilidade(getBaseContext()).alteraKeyboard(getBaseContext(), true);
@@ -213,7 +210,7 @@ public class CadtransacaoActivity extends AppCompatActivity {
                         tran.setValor(new BigDecimal(edtValor.getText().toString().replaceAll("[.]", "").replaceAll("[,]", ".")));
                     }
 
-                    String aux = edtData.getText().toString();
+                /*    String aux = edtData.getText().toString();
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                     Date dataTransacao = null;
                     try {
@@ -222,11 +219,11 @@ public class CadtransacaoActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     sdf.applyPattern("yyyy-MM-dd");
-                    aux = sdf.format(dataTransacao);
-                    tran.setData(aux);
+                    aux = sdf.format(dataTransacao);*/
+                    tran.setData(Utilidade.formataData("dd/MM/yyyy", "yyyy-MM-dd", edtData.getText().toString()));
                     Log.e("CADASTRO", tran.toString());
 
-                    db.salvarTransacao(tran);
+                    db.salvar(tran);
                     this.alertDialogNovaTransacao();
                 } else {
                     Toast.makeText(CadtransacaoActivity.this, R.string.erro_campovazio, Toast.LENGTH_SHORT).show();

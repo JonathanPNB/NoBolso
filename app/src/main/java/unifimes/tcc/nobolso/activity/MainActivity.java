@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
 */
-                intent = new Intent(this, Calendario.class);
+                intent = new Intent(this, CalendarioActivity.class);
                 startActivity(intent);
          //       finish();
 

@@ -18,7 +18,8 @@
 
     <string name="erro_campovazio">Preencha todos os campos</string>
     <string name="erro_radiobutton">Selecione uma das opções</string>
-    <string name="action_selecione">Selecione a Categoria</string>
+    <string name="erro_selecione_categoria">Selecione a Categoria</string>
+    <string name="erro_selecione_ano">Selecione o Ano</string>
     <string name="erro_gerargrafico">Não existem dados para o período informado</string>
     <!--string name="info_selecione">Selecione o tipo da Transação</string-->
 
@@ -45,7 +46,6 @@
     </string-array>
 
     <string-array name="array_tipoFiltroRelatorio">
-        <item>Todos</item>
         <item>Despesa</item>
         <item>Receita</item>
     </string-array>
