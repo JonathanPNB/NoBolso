@@ -123,7 +123,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/button_data"
             android:onClick="showDatePickerDialog"
-            android:background="@drawable/calendar"
+            android:background="@drawable/ic_action_calendar_day"
             android:nestedScrollingEnabled="false"
             android:enabled="false"
             android:clickable="false" />

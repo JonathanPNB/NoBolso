@@ -82,7 +82,6 @@ public class CadcategoriaActivity extends AppCompatActivity {
         catDAO.salvar(this, cat);
         intent = new Intent(getBaseContext(), CategoriasActivity.class);
         startActivity(intent);
-       // catDAO.fecharConexao();
         finish();
     }
 
@@ -126,7 +125,6 @@ public class CadcategoriaActivity extends AppCompatActivity {
                 finish();
             }
         });
-     //   catDAO.fecharConexao();
     }
 
     @Override

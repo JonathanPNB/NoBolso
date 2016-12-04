@@ -1,6 +1,8 @@
 package unifimes.tcc.nobolso.utilidade;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -193,7 +195,7 @@ public class Utilidade {
             mascara = mascara.concat(c);
         }
         DecimalFormat formato = new DecimalFormat(mascara);
-      //  Log.e("formataNumero",numero+"-"+casas+" / "+mascara+" -- "+formato.format(numero));
+        //  Log.e("formataNumero",numero+"-"+casas+" / "+mascara+" -- "+formato.format(numero));
         return formato.format(numero);
     }
 
@@ -213,16 +215,16 @@ public class Utilidade {
     public static int ultimoDiadoMes(int mes) {
         int ultimoDia;
         //alterar para o mes de abril
-        c.set(Calendar.MONTH, mes-1);
+        c.set(Calendar.MONTH, mes - 1);
         //pega o ultimo dia do mes de abril
         ultimoDia = c.getActualMaximum(Calendar.DAY_OF_MONTH);
-        Log.e("ultimoDiadoMes","dia = "+ultimoDia+"/"+mes);
+        Log.e("ultimoDiadoMes", "dia = " + ultimoDia + "/" + mes);
         return ultimoDia;
     }
 
     public static BigDecimal calculaPorcentagem(BigDecimal valorItem, BigDecimal valorTotal) {
         BigDecimal resultado = valorItem.multiply(new BigDecimal("100")).divide(valorTotal, BigDecimal.ROUND_HALF_UP);
-    //    Log.e("calculaPorcentagem",valorItem+" - "+valorTotal+" - "+resultado);
+        //    Log.e("calculaPorcentagem",valorItem+" - "+valorTotal+" - "+resultado);
         return resultado;
     }
 
@@ -237,5 +239,6 @@ public class Utilidade {
         sdf.applyPattern(formatoNovo);
         return sdf.format(dataTransacao);
     }
+
 
 }

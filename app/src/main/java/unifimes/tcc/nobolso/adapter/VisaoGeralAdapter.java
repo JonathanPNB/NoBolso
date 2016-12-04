@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.math.BigDecimal;
@@ -55,13 +56,14 @@ public class VisaoGeralAdapter extends BaseAdapter {
             layout = view;
         }
 
+        ImageView imagem = (ImageView) layout.findViewById(R.id.imageView);
         TextView tipo = (TextView) layout.findViewById(R.id.textView_catGrafico);
-    //    View separador1 = layout.findViewById(R.id.separator4);
         tipo.setText(this.lista[position]);
 
         TextView valorAtual = (TextView) layout.findViewById(R.id.textView_valorGrafico);
         switch (position) {
             case 0:
+                imagem.setVisibility(View.INVISIBLE);
                 valorAtual.setText(String.valueOf("R$ " + Utilidade.formataMoeda(this.valores[position])));
                 if(this.valores[position].compareTo(BigDecimal.ZERO) < 0) {//se this.valores[position] for < que BigDecimal.ZERO
                     valorAtual.setTextColor(Color.RED);
@@ -72,14 +74,10 @@ public class VisaoGeralAdapter extends BaseAdapter {
                 break;
             case 2:
                 valorAtual.setText(String.valueOf("R$ "+ Utilidade.formataMoeda(this.valores[position])));
-                valorAtual.setTextColor(Color.RED);
                 break;
             case 3:
-                if(this.valores[position].compareTo(BigDecimal.ZERO) >= 0) {
-                    valorAtual.setText(String.valueOf("R$ "+ Utilidade.formataMoeda(this.valores[position])));
-                    valorAtual.setTextColor(Color.GREEN);
-                } else {
-                    valorAtual.setText(String.valueOf("R$ "+ Utilidade.formataMoeda(this.valores[position])));
+                valorAtual.setText(String.valueOf("R$ "+ Utilidade.formataMoeda(this.valores[position])));
+                if(this.valores[position].compareTo(BigDecimal.ZERO) < 0) {
                     valorAtual.setTextColor(Color.RED);
                 }
                 default:

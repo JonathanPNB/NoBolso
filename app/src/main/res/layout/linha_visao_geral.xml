@@ -21,7 +21,8 @@
         android:src="@drawable/arrow"
         android:layout_alignBottom="@+id/textView_valorGrafico"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:visibility="visible" />
 
     <TextView
         android:layout_width="wrap_content"

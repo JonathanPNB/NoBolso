@@ -237,7 +237,7 @@ public class CadtransacaoActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (spnTipotrans.getSelectedItemPosition() >= 0) {
+        if (spnTipotrans.getSelectedItemPosition() < 2) {
             this.alertDialogDescartarTransacao();
         } else {
             intent = new Intent(this, MainActivity.class);

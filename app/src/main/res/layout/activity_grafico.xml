@@ -13,8 +13,8 @@
 
     <com.echo.holographlibrary.PieGraph
         android:visibility="invisible"
-        android:layout_width="329dp"
-        android:layout_height="258dp"
+        android:layout_width="332dp"
+        android:layout_height="169dp"
         android:id="@+id/pieGraph" />
 
     <View

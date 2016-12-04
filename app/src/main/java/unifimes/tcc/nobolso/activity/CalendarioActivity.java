@@ -16,6 +16,7 @@ public class CalendarioActivity extends AppCompatActivity {
     CalendarView calendario;
     Bundle bundle = new Bundle();
     Intent intent;
+    Long date;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +24,7 @@ public class CalendarioActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//habilita botão voltar na ActionBar
 
         calendario = (CalendarView) findViewById(R.id.calendarView);
+        date = calendario.getDate();
         calendario.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
@@ -37,7 +39,11 @@ public class CalendarioActivity extends AppCompatActivity {
                 bundle.putInt("mesSel",month+1);
                 bundle.putInt("anoSel",year);
 
-                alertDialogConfirmacao(dataSelecionada);
+                if(calendario.getDate() != date){
+                    date = calendario.getDate();
+                } else {
+                    alertDialogConfirmacao(dataSelecionada);
+                }
             }
         });
     }

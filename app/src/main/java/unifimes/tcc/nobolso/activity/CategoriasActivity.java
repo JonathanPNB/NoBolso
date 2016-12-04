@@ -100,9 +100,6 @@ public class CategoriasActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.opcaoEditar:
                 if (selectedListViewAdapter != null) {
-   /*                 Toast.makeText(this, "Opção Editar foi selecionada -  " +nomeSelecionado+" IDCategoria: "+
-                            idCategoria, Toast.LENGTH_SHORT).show();
-     */
                     if (idCategoria >= 0) {
                         Intent intent = new Intent(getBaseContext(), CadcategoriaActivity.class);
                         bundle.putInt("id_categoria", idCategoria);
@@ -120,7 +117,6 @@ public class CategoriasActivity extends AppCompatActivity {
             default:
                 break;
         }
-        //  catDAO.fecharConexao();
         return super.onContextItemSelected(item);
     }
 
@@ -134,7 +130,6 @@ public class CategoriasActivity extends AppCompatActivity {
                             selectedListViewAdapter.remove(selectedListViewAdapter.getItem(info.position));
                             selectedListViewAdapter.notifyDataSetChanged();
                             Toast.makeText(getBaseContext(), "Categoria Excluida com sucesso.", Toast.LENGTH_SHORT).show();
-                            //         catDAO.fecharConexao();
                         }
                         break;
 

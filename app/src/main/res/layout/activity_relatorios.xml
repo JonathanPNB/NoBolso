@@ -8,12 +8,36 @@
 
     <LinearLayout
         android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout3"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tipo de Relatório"
+            android:id="@+id/textView"
+            android:gravity="start"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Spinner
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner_tipo_relatorio"
+            android:spinnerMode="dropdown" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/linearLayout">
+        android:id="@+id/linearLayout"
+        android:layout_below="@+id/linearLayout3"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
 
         <TextView android:text="Filtrar por: " android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,7 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout2"
-        android:layout_below="@+id/linearLayout3"
+        android:layout_below="@+id/linearLayout4"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true">
 
@@ -83,35 +107,12 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout4"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/linearLayout3">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tipo de Relatório"
-            android:id="@+id/textView"
-            android:gravity="start"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <Spinner
-            android:layout_width="190dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/spinner_tipo_relatorio"
-            android:spinnerMode="dropdown" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout6">
 
         <Button
             android:layout_width="wrap_content"
@@ -126,9 +127,10 @@
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/linearLayout3"
-        android:layout_toRightOf="@+id/linearLayout4"
-        android:layout_toEndOf="@+id/linearLayout4">
+        android:id="@+id/linearLayout7"
+        android:layout_alignTop="@+id/linearLayout4"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
 
         <TextView
             android:layout_width="wrap_content"

@@ -5,7 +5,7 @@
     <!-- android:windowSoftInputMode=”adjustResize” -->
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_carteira"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
@@ -68,13 +68,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
-        <activity android:name=".activity.GraficoActivity"
+        <activity
+            android:name=".activity.GraficoActivity"
             android:label="@string/title_activity_grafico"
             android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
+        <activity
+            android:name=".activity.SobreActivity"
+            android:label="@string/title_activity_sobre"></activity>
     </application>
 
 </manifest>

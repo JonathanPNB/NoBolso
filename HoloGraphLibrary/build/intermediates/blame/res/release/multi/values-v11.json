@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "E:\\Android\\Projetos\\NoBolso\\HoloGraphLibrary\\build\\intermediates\\res\\merged\\release\\values-v11\\values-v11.xml",
+        "outputFile": "D:\\Android\\Projetos\\NoBolso\\HoloGraphLibrary\\build\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-v11\\values-v11.xml",
         "map": [
             {
                 "to": {
@@ -12,7 +12,7 @@
                     "endOffset": 187
                 },
                 "from": {
-                    "file": "E:\\Android\\Projetos\\NoBolso\\HoloGraphLibrary\\res\\values-v11\\styles.xml",
+                    "file": "D:\\Android\\Projetos\\NoBolso\\HoloGraphLibrary\\res\\values-v11\\styles.xml",
                     "position": {
                         "startLine": 6,
                         "startColumn": 4,

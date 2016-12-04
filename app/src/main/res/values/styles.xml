@@ -6,7 +6,6 @@
     </style>
 
     <style name="Overflow">
-        <item name="android:src">@drawable/ic_action_info</item>
         <item name="android:background">?android:attr/actionBarItemBackground</item>
         <item name="android:contentDescription">@string/status_bar_notification_info_overflow</item>
     </style>
