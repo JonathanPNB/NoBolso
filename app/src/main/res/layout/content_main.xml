@@ -68,7 +68,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="#FFFFFFFF">
+        android:background="#FFFFFF">
 
         <Button
             android:layout_width="wrap_content"
@@ -90,7 +90,7 @@
             android:id="@+id/button_calendario"
             android:drawableTop="@drawable/ic_action_calendar_day"
             android:layout_alignParentTop="true"
-            android:background="#FFFFFFFF"
+            android:background="@null"
             android:padding="10dp"
             android:onClick="onClick"
             android:layout_weight="0.3"
@@ -122,7 +122,7 @@
             android:layout_toStartOf="@+id/button_categorias"
             android:layout_alignTop="@+id/button_transacoes"
             android:layout_alignBottom="@+id/button_transacoes"
-            android:background="#ffffffff"
+            android:background="@null"
             android:clickable="true"
             android:padding="10dp"
             android:onClick="onClick"
@@ -135,7 +135,7 @@
             android:id="@+id/button_transacoes"
             android:drawableTop="@drawable/ic_action_list_2"
             android:layout_alignParentTop="true"
-            android:background="#ffffffff"
+            android:background="@null"
             android:clickable="true"
             android:padding="10dp"
             android:onClick="onClick"
