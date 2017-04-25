@@ -13,6 +13,7 @@ import java.util.List;
 
 import unifimes.tcc.nobolso.database.BDCore;
 import unifimes.tcc.nobolso.entity.Categoria;
+import unifimes.tcc.nobolso.utilidade.Utilidade;
 
 /**
  * Created by Jonathan on 14/11/2015.
@@ -20,11 +21,18 @@ import unifimes.tcc.nobolso.entity.Categoria;
  */
 public class CategoriaDAO {
 
-    private SQLiteDatabase bd = null;
+    private SQLiteDatabase bd;
+    BDCore aux;
+    private Context ctx;
+    private String LOG_TAG = getClass().getSimpleName()+"/"+ Utilidade.classeChamadora();
 
     public CategoriaDAO(Context context) {
-        BDCore conn = BDCore.getInstance(context);
+ /*       BDCore conn = BDCore.getInstance(context);
         bd = conn.getWritableDatabase();
+   */   this.aux = BDCore.getInstance(context);
+        this.bd = aux.getWritableDatabase();
+        this.ctx = context;
+
     }
 
     public List<Categoria> listar(int tipo) {
@@ -122,7 +130,7 @@ public class CategoriaDAO {
 
                     Toast.makeText(context, "Dados inseridos com sucesso. " + novosValores, Toast.LENGTH_SHORT).show();
                 } catch (SQLiteException e) {
-                    Log.e("ERRO", e.getMessage());
+                    Log.e(LOG_TAG, e.getMessage());
                     return;
                 }
             }
@@ -132,7 +140,7 @@ public class CategoriaDAO {
 
                 Toast.makeText(context, "Dados inseridos com sucesso. " + novosValores, Toast.LENGTH_SHORT).show();
             } catch (SQLiteException e) {
-                Log.e("ERRO", e.getMessage());
+                Log.e(LOG_TAG, e.getMessage());
                 return;
             }
         }
@@ -171,9 +179,9 @@ public class CategoriaDAO {
         ContentValues valores = contentValues(this.buscaObj(id));
         try {
             bd.update(BDCore.NOME_TABELA_CATEGORIA, valores, BDCore.COLUNA_ID + " =  ?", new String[]{String.valueOf(id)});
-            Log.e("INFO", "Categoria excluida com sucesso. " + valores.toString());
+            Log.e(LOG_TAG, "Categoria excluida com sucesso. " + valores.toString());
         } catch (SQLiteException e) {
-            Log.e("ERRO", e.getMessage());
+            Log.e(LOG_TAG, e.getMessage());
             return;
         }
     }
@@ -185,10 +193,10 @@ public class CategoriaDAO {
                 bd.update(BDCore.NOME_TABELA_CATEGORIA, novosValores, BDCore.COLUNA_ID + " =  ?",
                         new String[]{String.valueOf(cat.getId())});
 
-                Log.e("CDAO/alterar", novosValores.toString()+" ID: "+cat.getId());
+                Log.e(LOG_TAG, novosValores.toString()+" ID: "+cat.getId());
                 Toast.makeText(context, "Dados alterados com sucesso. " + novosValores, Toast.LENGTH_SHORT).show();
             } catch (SQLiteException e) {
-                Log.e("ERRO", e.getMessage());
+                Log.e(LOG_TAG, e.getMessage());
                 return;
             }
         }

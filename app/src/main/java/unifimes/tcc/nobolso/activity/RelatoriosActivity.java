@@ -94,7 +94,7 @@ public class RelatoriosActivity extends AppCompatActivity {
                     Toast.makeText(RelatoriosActivity.this, R.string.erro_selecione_ano, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                bundle.putString("filtroSel", spinnerTipoFiltro.getItemAtPosition(filtroSel).toString());
+                bundle.putString("filtroSel", "tb"+spinnerTipoFiltro.getItemAtPosition(filtroSel).toString());
                 bundle.putInt("mesSel", mesSel);
                 if (anoSel > 0) {
                     bundle.putInt("anoSel", Integer.parseInt(spinnerAno.getItemAtPosition(anoSel).toString()));

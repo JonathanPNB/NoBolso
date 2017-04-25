@@ -40,7 +40,7 @@ public class GraficoAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        Log.e("getItem",mapValores.keySet().toString());
+        Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(),mapValores.keySet().toString());
         return mapValores.get(mapValores.keySet().toString());
     }
 
@@ -79,7 +79,7 @@ public class GraficoAdapter extends BaseAdapter {
         valor.setText(String.valueOf("R$ " + Utilidade.formataMoeda(listaValores.get(position))));
         porcentagem.setText(String.valueOf(Utilidade.calculaPorcentagem(listaValores.get(position), somaValores) + "%"));
         cor.setBackgroundColor(this.listaCores[position]);
-        Log.e("getView", "mapValores = " + listaCategorias.get(position) + " / " + listaValores.get(position));
+        Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), "mapValores = " + listaCategorias.get(position) + " / " + listaValores.get(position));
 
         return layout;
     }

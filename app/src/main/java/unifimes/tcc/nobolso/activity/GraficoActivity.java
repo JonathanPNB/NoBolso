@@ -23,6 +23,7 @@ import unifimes.tcc.nobolso.adapter.GraficoAdapter;
 import unifimes.tcc.nobolso.dao.CategoriaDAO;
 import unifimes.tcc.nobolso.dao.TransacaoDAO;
 import unifimes.tcc.nobolso.entity.Transacao;
+import unifimes.tcc.nobolso.utilidade.Utilidade;
 
 public class GraficoActivity extends AppCompatActivity {
 
@@ -32,6 +33,7 @@ public class GraficoActivity extends AppCompatActivity {
     TextView textoErro;
     ListView listView;
     int[] allColors;
+    private String LOG_TAG = getClass().getSimpleName()+"/"+ Utilidade.classeChamadora();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +93,7 @@ public class GraficoActivity extends AppCompatActivity {
     }
 
     private void geraPieGraph(ArrayList<Transacao> lista/*, String tipoTransacao*/) {//FUNCIONANDO
-        Log.e("geraPieGraph", "Lista = " + lista.toString());
+        Log.e(LOG_TAG, "Lista = " + lista.toString());
         TreeMap<String, BigDecimal> listaValores = new TreeMap<>();
       /*  if (tipoTransacao.equalsIgnoreCase("Todos")) {
             float valorReceitas = 0;
@@ -123,9 +125,9 @@ public class GraficoActivity extends AppCompatActivity {
             }
         } else {*/
        //     Log.e("geraPieGraph", tipoTransacao + " - " + lista.size());
-            float valorTransacao;
+            Double valorTransacao;
             for (int i = 0; i < lista.size(); i++) {
-                valorTransacao = lista.get(i).getValor().floatValue();
+                valorTransacao = lista.get(i).getValor().doubleValue();
                 if (valorTransacao < 0) {
                     valorTransacao *= -1;
                 }
@@ -135,13 +137,13 @@ public class GraficoActivity extends AppCompatActivity {
                     listaValores.put(lista.get(i).getCategoria(),
                             listaValores.get(lista.get(i).getCategoria()).add(new BigDecimal(String.valueOf(valorTransacao))));
                 }
-                Log.e("valcategoria", lista.get(i).getCategoria() + " = " + new BigDecimal(String.valueOf(valorTransacao)) +
+                Log.e(LOG_TAG, lista.get(i).getCategoria() + " = " + new BigDecimal(String.valueOf(valorTransacao)) +
                         " / lista.size = " + lista.size());
             }
             int quantidadeChaves = 0;
             for (String chave : listaValores.keySet()) {
                 if (chave != null) {
-                    Log.e("valcategoria2", chave + " = " + listaValores.get(chave));
+                    Log.e(LOG_TAG, chave + " = " + listaValores.get(chave));
                     PieSlice slice = new PieSlice();
                     slice.setColor(allColors[quantidadeChaves]);
                     slice.setValue(listaValores.get(chave).floatValue());
@@ -154,7 +156,7 @@ public class GraficoActivity extends AppCompatActivity {
         if (allColors.length > 0 && !listaValores.isEmpty()) {
             for (String chave : listaValores.keySet()) {
                 if (chave != null) {
-                    Log.e("listaValores", "Chave: " + chave);
+                    Log.e(LOG_TAG, "Chave: " + chave);
                 }
             }
             listView.setAdapter(new GraficoAdapter(this, allColors, listaValores));

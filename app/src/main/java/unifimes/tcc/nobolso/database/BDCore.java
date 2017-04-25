@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import unifimes.tcc.nobolso.utilidade.Utilidade;
+
 /**
  * Created by Jonathan on 29/06/2015.
  * Classe para conexao e criacao do banco de dados
@@ -16,12 +18,13 @@ public class BDCore extends SQLiteOpenHelper {
     private static BDCore mInstance = null;
 
     private static final String NOME_BD = "NoBolso.db";
-    private static final int VERSAO_BD = 24;
-    public static final String NOME_TABELA_CATEGORIA = "Categoria";
-    public static final String NOME_TABELA_RECEITA = "Receita";
-    public static final String NOME_TABELA_DESPESA = "Despesa";
+    private static final int VERSAO_BD = 25;
+    public static final String NOME_TABELA_CATEGORIA = "tbCategoria";
+    public static final String NOME_TABELA_RECEITA = "tbReceita";
+    public static final String NOME_TABELA_DESPESA = "tbDespesa";
+    public static final String NOME_TABELA_SALDO = "tbSaldoMensal";
 
-    public static final String[] NOME_TABELAS = {NOME_TABELA_RECEITA, NOME_TABELA_DESPESA, NOME_TABELA_CATEGORIA/*, NOME_TABELA_SALDO*/};
+    public static final String[] NOME_TABELAS = {NOME_TABELA_RECEITA, NOME_TABELA_DESPESA, NOME_TABELA_CATEGORIA, NOME_TABELA_SALDO};
     private static final String[] CATEGORIAS_RECEITA_PADRAO = {"Salário", "Rendimentos", "Bônus", "Comissão", "Férias",
             "13º Salário","Reembolso", "Outras Receitas"};
     private static final String[] CATEGORIAS_DESPESA_PADRAO = {"Lazer", "Alimentação", "Automóveis", "Casa", "Impostos",
@@ -34,16 +37,19 @@ public class BDCore extends SQLiteOpenHelper {
     public static final String COLUNA_DATA = "data";
     public static final String COLUNA_VALOR = "valor";
     public static final String COLUNA_VISIVEL = "visivel";
+    public static final String COLUNA_MES = "mes";
+    public static final String COLUNA_ANO = "ano";
+    public static final String COLUNA_VALOR_SALDO = "valorSaldo";
 
     private static final String CRIAR_TABELA_CATEGORIA =
-            "CREATE TABLE [Categoria] (\n" +
+            "CREATE TABLE [tbCategoria] (\n" +
                     "  [id] INTEGER PRIMARY KEY AUTOINCREMENT, \n" +
                     "  [descricao] TEXT NOT NULL, \n" +
                     "  [tipo] TINYINT NOT NULL, \n" +
-                    "  [visivel] INTEGER NOT NULL DEFAULT 'true');";
+                    "  [visivel] INTEGER NOT NULL DEFAULT 1);";//0 = false e 1 = true
 
     private static final String CRIAR_TABELA_DESPESA =
-            "CREATE TABLE [Despesa] (\n" +
+            "CREATE TABLE [tbDespesa] (\n" +
                     "  [id] INTEGER PRIMARY KEY AUTOINCREMENT, \n" +
                     "  [valor] DOUBLE(0, 2) NOT NULL, \n" +
                     "  [data] DATE NOT NULL, \n" +
@@ -51,12 +57,19 @@ public class BDCore extends SQLiteOpenHelper {
                     "  [id_categoria] INTEGER NOT NULL CONSTRAINT [id_categoria] REFERENCES [Categoria]([id_categoria]) ON DELETE RESTRICT);\n";
 
     private static final String CRIAR_TABELA_RECEITA =
-            "CREATE TABLE [Receita] (\n" +
+            "CREATE TABLE [tbReceita] (\n" +
                     "  [id] INTEGER PRIMARY KEY AUTOINCREMENT, \n" +
                     "  [valor] DOUBLE(0, 2) NOT NULL, \n" +
                     "  [data] DATE NOT NULL, \n" +
                     "  [descricao] TEXT, \n" +
                     "  [id_categoria] INTEGER NOT NULL CONSTRAINT [id_categoria] REFERENCES [Categoria]([id_categoria]) ON DELETE RESTRICT);\n";
+
+    private static final String CRIAR_TABELA_SALDO =
+            "CREATE TABLE [tbSaldoMensal] (\n" +
+                    "[id] INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                    "[mes] INTEGER NOT NULL, \n" +
+                    "[ano] INTEGER NOT NULL, \n" +
+                    "[valorSaldo] DOUBLE(0, 2) NOT NULL);";
 
     private String INSERIR_CATEGORIAS_PADRAO;
 
@@ -86,7 +99,7 @@ public class BDCore extends SQLiteOpenHelper {
             bd.execSQL(this.CRIAR_TABELA_CATEGORIA);
             bd.execSQL(this.CRIAR_TABELA_DESPESA);
             bd.execSQL(this.CRIAR_TABELA_RECEITA);
-    //        bd.execSQL(this.CRIAR_TABELA_SALDO);
+            bd.execSQL(this.CRIAR_TABELA_SALDO);
 
             for (String despesa : this.CATEGORIAS_DESPESA_PADRAO) {
                 INSERIR_CATEGORIAS_PADRAO = "INSERT INTO " + NOME_TABELA_CATEGORIA + " (\n" +
@@ -100,10 +113,10 @@ public class BDCore extends SQLiteOpenHelper {
                 bd.execSQL(INSERIR_CATEGORIAS_PADRAO);
             }
         } catch (SQLiteException e) {
-            Log.e("ERRO", e.getMessage());
+            Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), e.getMessage());
             return;
         }
-        Log.e("CRIAR_TABELAS", "Tabelas Criadas com Sucesso!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), "Tabelas Criadas com Sucesso!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
     /**
@@ -117,7 +130,7 @@ public class BDCore extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase bd, int i, int i1) {
         for (int a = 0; a < NOME_TABELAS.length; a++) {
             bd.execSQL("DROP TABLE IF EXISTS " + NOME_TABELAS[a]);
-            Log.w("ATUALIZA DB", "DROP TABLE IF EXISTS " + NOME_TABELAS[a]);
+            Log.w(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), "DROP TABLE IF EXISTS " + NOME_TABELAS[a]);
         }
         this.onCreate(bd);
     }
@@ -125,7 +138,7 @@ public class BDCore extends SQLiteOpenHelper {
     public void clearDB() {
         SQLiteDatabase bd = this.getReadableDatabase();
         for (int a = 0; a < NOME_TABELAS.length; a++) {
-            Log.w("NOMES", NOME_TABELAS[a]);
+            Log.w(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), NOME_TABELAS[a]);
             bd.execSQL("DROP TABLE IF EXISTS " + NOME_TABELAS[a]);
         }
         this.onCreate(bd);
@@ -155,13 +168,13 @@ public class BDCore extends SQLiteOpenHelper {
                 bd.execSQL(this.CRIAR_TABELA_DESPESA);
             if (tabela.equalsIgnoreCase("categoria"))
                 bd.execSQL(this.CRIAR_TABELA_CATEGORIA);
-     /*       if (tabela.equalsIgnoreCase("saldo"))
+            if (tabela.equalsIgnoreCase("saldo"))
                 bd.execSQL(this.CRIAR_TABELA_SALDO);
-*/
+
         } catch (SQLiteException e) {
-            Log.e("ERRO", e.getMessage());
+            Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), e.getMessage());
             return;
         }
-        Log.i("criaTabela", "Tabela " + tabela + " Criada com Sucesso");
+        Log.i(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), "Tabela " + tabela + " Criada com Sucesso");
     }
 }

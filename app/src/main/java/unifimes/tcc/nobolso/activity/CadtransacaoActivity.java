@@ -221,7 +221,7 @@ public class CadtransacaoActivity extends AppCompatActivity {
                     sdf.applyPattern("yyyy-MM-dd");
                     aux = sdf.format(dataTransacao);*/
                     tran.setData(Utilidade.formataData("dd/MM/yyyy", "yyyy-MM-dd", edtData.getText().toString()));
-                    Log.e("CADASTRO", tran.toString());
+                    Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), tran.toString());
 
                     db.salvar(tran);
                     this.alertDialogNovaTransacao();

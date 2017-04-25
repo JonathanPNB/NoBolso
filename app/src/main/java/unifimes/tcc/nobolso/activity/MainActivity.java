@@ -107,17 +107,17 @@ public class MainActivity extends AppCompatActivity {
 
         BigDecimal saldoAcumulado, totalReceita, totalDespesa, saldoMes;
 
-        totalReceita = Utilidade.somaValores(tDAO.transacoesMes("Receita", Utilidade.getMes(), Utilidade.getAno()));
-        totalDespesa = Utilidade.somaValores(tDAO.transacoesMes("Despesa", Utilidade.getMes(), Utilidade.getAno()));
+        totalReceita = Utilidade.somaValores(tDAO.transacoesMes(BDCore.NOME_TABELA_RECEITA, Utilidade.getMes(), Utilidade.getAno()));
+        totalDespesa = Utilidade.somaValores(tDAO.transacoesMes(BDCore.NOME_TABELA_DESPESA, Utilidade.getMes(), Utilidade.getAno()));
         saldoMes = totalReceita.add(totalDespesa);
 
-        saldoAcumulado = Utilidade.somaValores(tDAO.buscarTodasTransacoes()).subtract(saldoMes);
+        saldoAcumulado = Utilidade.somaValores(tDAO.buscarTodasTransacoes())/*.subtract(saldoMes)*/;
 
-        Log.e("listVisaoGeralAdapter", "buscarTodasTransacoes = " + Utilidade.somaValores(tDAO.buscarTodasTransacoes()) +
+        Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), "buscarTodasTransacoes = " + Utilidade.somaValores(tDAO.buscarTodasTransacoes()) +
                 " / saldoAcumulado = " + saldoAcumulado.toString());
-        Log.e("listVisaoGeralAdapter", Utilidade.getMes() + "/" + Utilidade.getAno());
+        Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), Utilidade.getMes() + "/" + Utilidade.getAno());
 
-        String[] tipos = {"Saldo Acumulado", "Entrada", "Saída", "Saldo do Mês"};
+        String[] tipos = {"Saldo Acumulado", "Receita", "Despesa", "Saldo do Mês"};
         BigDecimal[] valores = {saldoAcumulado, totalReceita, totalDespesa, saldoMes};
 
         lista.setAdapter(new VisaoGeralAdapter(getBaseContext(), tipos, valores));
@@ -133,14 +133,14 @@ public class MainActivity extends AppCompatActivity {
 
                     switch (position) {
                         case 1:
-                            bundle.putString("tipoRelatório", "Receita");
+                            bundle.putString("tipoRelatório", BDCore.NOME_TABELA_RECEITA);
                             bundle.putString("Título", "Receitas " + Utilidade.getMes() + "/" + Utilidade.getAno());
                             intent.putExtras(bundle);
                             startActivity(intent);
                             //       finish();
                             break;
                         case 2:
-                            bundle.putString("tipoRelatório", "Despesa");
+                            bundle.putString("tipoRelatório", BDCore.NOME_TABELA_DESPESA);
                             bundle.putString("Título", "Despesas " + Utilidade.getMes() + "/" + Utilidade.getAno());
                             intent.putExtras(bundle);
                             startActivity(intent);
@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("A categoria será excluida.\n" +
+        builder.setMessage("Todos os dados serão perdidos.\n" +
                 "Deseja Continuar?").setPositiveButton("Sim", dialogClickListener)
                 .setNegativeButton("Não", dialogClickListener).show();
     }

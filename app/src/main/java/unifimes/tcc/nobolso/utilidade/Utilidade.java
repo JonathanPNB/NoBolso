@@ -42,6 +42,9 @@ public class Utilidade {
         this.ctx = ctx;
     }
 
+    public Utilidade() {
+    }
+
     private static class KeylistenerNumber extends NumberKeyListener {
 
         public int getInputType() {
@@ -171,7 +174,7 @@ public class Utilidade {
                 }
             } catch (NumberFormatException e) {
             }
-            //        Log.e("formataBigDecimal", "Valor saída: " + valor);
+                    Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), "Valor saída: " + valor);
             return valor;
         }
     }
@@ -214,11 +217,12 @@ public class Utilidade {
 
     public static int ultimoDiadoMes(int mes) {
         int ultimoDia;
+        Utilidade util = new Utilidade();
         //alterar para o mes de abril
         c.set(Calendar.MONTH, mes - 1);
         //pega o ultimo dia do mes de abril
         ultimoDia = c.getActualMaximum(Calendar.DAY_OF_MONTH);
-        Log.e("ultimoDiadoMes", "dia = " + ultimoDia + "/" + mes);
+        Log.e(util.getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), "dia = " + ultimoDia + "/" + mes);
         return ultimoDia;
     }
 
@@ -238,6 +242,13 @@ public class Utilidade {
         }
         sdf.applyPattern(formatoNovo);
         return sdf.format(dataTransacao);
+    }
+
+    public static String classeChamadora () {
+        Throwable thr = new Throwable();
+        thr.fillInStackTrace ();
+        StackTraceElement[] ste = thr.getStackTrace();
+        return ste[1].getMethodName();
     }
 
 
