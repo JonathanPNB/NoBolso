@@ -82,14 +82,16 @@ public class ListaTransacoesActivity extends AppCompatActivity {
         tvDespesa = (TextView) findViewById(R.id.textView8);
 
         if (tipoRelatorio.equalsIgnoreCase("Geral")) {
-            listReceitas.setAdapter(new TransacaoAdapter(this, tDAO.transacoesMes(BDCore.NOME_TABELA_RECEITA, Utilidade.getMes(),
-                    Utilidade.getAno())));
-            listDespesas.setAdapter(new TransacaoAdapter(this, tDAO.transacoesMes(BDCore.NOME_TABELA_DESPESA, Utilidade.getMes(),
-                    Utilidade.getAno())));
+            listReceitas.setAdapter(new TransacaoAdapter(this, tDAO.transacoesMes(BDCore.NOME_TABELA_RECEITA,
+                    Utilidade.getMes(), Utilidade.getAno())));
+            listDespesas.setAdapter(new TransacaoAdapter(this, tDAO.transacoesMes(BDCore.NOME_TABELA_DESPESA,
+                    Utilidade.getMes(), Utilidade.getAno())));
         } else if (tipoRelatorio.equalsIgnoreCase("tData")) {
             setTitle(tituloActivity);
-            listReceitas.setAdapter(new TransacaoAdapter(this, tDAO.transacoesDia(BDCore.NOME_TABELA_RECEITA, diaSel, mesSel, anoSel)));
-            listDespesas.setAdapter(new TransacaoAdapter(this, tDAO.transacoesDia(BDCore.NOME_TABELA_DESPESA, diaSel, mesSel, anoSel)));
+            listReceitas.setAdapter(new TransacaoAdapter(this, tDAO.transacoesDia(BDCore.NOME_TABELA_RECEITA,
+                    diaSel, mesSel, anoSel)));
+            listDespesas.setAdapter(new TransacaoAdapter(this, tDAO.transacoesDia(BDCore.NOME_TABELA_DESPESA,
+                    diaSel, mesSel, anoSel)));
         } else {
             setTitle(tituloActivity);
             tvDespesa.setVisibility(View.GONE);

@@ -24,12 +24,9 @@ public class CategoriaDAO {
     private SQLiteDatabase bd;
     BDCore aux;
     private Context ctx;
-    private String LOG_TAG = getClass().getSimpleName()+"/"+ Utilidade.classeChamadora();
 
     public CategoriaDAO(Context context) {
- /*       BDCore conn = BDCore.getInstance(context);
-        bd = conn.getWritableDatabase();
-   */   this.aux = BDCore.getInstance(context);
+        this.aux = BDCore.getInstance(context);
         this.bd = aux.getWritableDatabase();
         this.ctx = context;
 
@@ -38,7 +35,6 @@ public class CategoriaDAO {
     public List<Categoria> listar(int tipo) {
         List<Categoria> list = new ArrayList<>();
         String selectQuery;
-        //  Boolean visivel;
 
         // Select All Query
         if (tipo != 2)
@@ -114,23 +110,23 @@ public class CategoriaDAO {
         return categoria;
     }
 
-    public void salvar(Context context, Categoria cat) {
+    public void salvar(Categoria cat) {
         ContentValues novosValores = contentValues(cat);
         int idCategoria = this.buscaId(cat.getDescricao());
         if (idCategoria >= 0) {//CATEGORIA JA EXISTE
             ContentValues oldValores = contentValues(this.buscaObj(idCategoria));//VERIFICA OS VALORES Q JA ESTAO GRAVADOS
 
             if (!oldValores.getAsBoolean(BDCore.COLUNA_VISIVEL)) {
-                Toast.makeText(context, "Categoria já cadastrada.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ctx, "Categoria já cadastrada.", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 try {
                     bd.update(BDCore.NOME_TABELA_CATEGORIA, novosValores, BDCore.COLUNA_ID + " =  ?",
                             new String[]{String.valueOf(idCategoria)});
 
-                    Toast.makeText(context, "Dados inseridos com sucesso. " + novosValores, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ctx, "Dados inseridos com sucesso. " + novosValores, Toast.LENGTH_SHORT).show();
                 } catch (SQLiteException e) {
-                    Log.e(LOG_TAG, e.getMessage());
+                    Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), e.getMessage());
                     return;
                 }
             }
@@ -138,9 +134,9 @@ public class CategoriaDAO {
             try {
                 bd.insert(BDCore.NOME_TABELA_CATEGORIA, null, novosValores);
 
-                Toast.makeText(context, "Dados inseridos com sucesso. " + novosValores, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ctx, "Dados inseridos com sucesso. " + novosValores, Toast.LENGTH_SHORT).show();
             } catch (SQLiteException e) {
-                Log.e(LOG_TAG, e.getMessage());
+                Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), e.getMessage());
                 return;
             }
         }
@@ -179,9 +175,10 @@ public class CategoriaDAO {
         ContentValues valores = contentValues(this.buscaObj(id));
         try {
             bd.update(BDCore.NOME_TABELA_CATEGORIA, valores, BDCore.COLUNA_ID + " =  ?", new String[]{String.valueOf(id)});
-            Log.e(LOG_TAG, "Categoria excluida com sucesso. " + valores.toString());
+            Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), "Categoria excluida com sucesso. " +
+                    valores.toString());
         } catch (SQLiteException e) {
-            Log.e(LOG_TAG, e.getMessage());
+            Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), e.getMessage());
             return;
         }
     }
@@ -193,10 +190,10 @@ public class CategoriaDAO {
                 bd.update(BDCore.NOME_TABELA_CATEGORIA, novosValores, BDCore.COLUNA_ID + " =  ?",
                         new String[]{String.valueOf(cat.getId())});
 
-                Log.e(LOG_TAG, novosValores.toString()+" ID: "+cat.getId());
+                Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), novosValores.toString()+" ID: "+cat.getId());
                 Toast.makeText(context, "Dados alterados com sucesso. " + novosValores, Toast.LENGTH_SHORT).show();
             } catch (SQLiteException e) {
-                Log.e(LOG_TAG, e.getMessage());
+                Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), e.getMessage());
                 return;
             }
         }

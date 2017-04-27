@@ -53,6 +53,6 @@ public class Categoria {
     }
     @Override
     public String toString() {
-        return getId() + " " +  getDescricao() + " " + getTipo() + " " + isVisivel();
+        return "Categoria: "+getId() + " " +  getDescricao() + " " + getTipo() + " " + isVisivel();
     }
 }

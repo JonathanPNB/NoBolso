@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import unifimes.tcc.nobolso.entity.Saldo;
 import unifimes.tcc.nobolso.entity.Transacao;
 
 /**
@@ -174,7 +175,7 @@ public class Utilidade {
                 }
             } catch (NumberFormatException e) {
             }
-                    Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), "Valor saída: " + valor);
+              //      Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), "Valor saída: " + valor);
             return valor;
         }
     }
@@ -206,11 +207,19 @@ public class Utilidade {
         return keylistenerNumber;
     }
 
-    public static BigDecimal somaValores(ArrayList<Transacao> lista) {
+    public static BigDecimal somaValorTransacao(ArrayList<Transacao> lista) {
         BigDecimal total = BigDecimal.ZERO;
         for (int i = 0; i < lista.size(); i++) {
             total = total.add(lista.get(i).getValor());
-            //  Log.e("somaValores", "i = " + i + " / " + total);
+        }
+        return total;
+    }
+
+    public static BigDecimal somaValorSaldo(ArrayList<Saldo> lista) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (int i = 0; i < lista.size(); i++) {
+            total = total.add(lista.get(i).getValorSaldo());
+            Log.e(Utilidade.classeChamadora(),"i = " + i + " / " + total);
         }
         return total;
     }

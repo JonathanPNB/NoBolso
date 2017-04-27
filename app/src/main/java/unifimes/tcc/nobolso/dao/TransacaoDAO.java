@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import unifimes.tcc.nobolso.database.BDCore;
+import unifimes.tcc.nobolso.entity.Saldo;
 import unifimes.tcc.nobolso.entity.Transacao;
 import unifimes.tcc.nobolso.utilidade.Utilidade;
 
@@ -26,6 +27,7 @@ public class TransacaoDAO {
     BDCore aux;
     public CategoriaDAO catDAO;
     private Context ctx;
+    public SaldoDAO sDAO;
 
     public TransacaoDAO(Context context) {
         this.aux = BDCore.getInstance(context);
@@ -35,15 +37,23 @@ public class TransacaoDAO {
 
     public void salvar(Transacao tran) {
         ContentValues values = contentValuesTransacao(tran);
-        //     util = new Utilidade(ctx);
+        Saldo saldo = new Saldo();
+        sDAO = new SaldoDAO(ctx);
 
-        if (tran.getTipo() == 0)
+        if (tran.getTipo() == 0) {
             NOME_TABELA = BDCore.NOME_TABELA_DESPESA;
-        else
+        } else {
             NOME_TABELA = BDCore.NOME_TABELA_RECEITA;
+        }
+
+        saldo.setMes(Integer.parseInt(tran.getData().substring(5,7)));
+        saldo.setAno(Integer.parseInt(tran.getData().substring(0,4)));
+        saldo.setValorSaldo(tran.getValor());
+        Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(),saldo.toString());
 
         try {
             bd.insert(NOME_TABELA, null, values);
+            sDAO.salvar(saldo);
             Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), "Dados inseridos com sucesso. - " + values);
             Toast.makeText(ctx, "Dados inseridos com sucesso. " + values, Toast.LENGTH_SHORT).show();
         } catch (SQLiteException e) {
@@ -131,13 +141,14 @@ public class TransacaoDAO {
                 transacao.setCategoria(catDAO.buscaNome(cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID_CATEGORIA))));
 
                 list.add(transacao);
-                Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), String.valueOf(cursor.getInt(0)) + " / " + cursor.getDouble(cursor.getColumnIndex("valor")) + " / " +
-                        cursor.getString(cursor.getColumnIndex("data")) + " / " + cursor.getString(cursor.getColumnIndex("descricao")) + " / " +
-                        cursor.getInt(cursor.getColumnIndex("id_categoria")));
+                Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), String.valueOf(cursor.getInt(0)) + " / " +
+                        cursor.getDouble(cursor.getColumnIndex(BDCore.COLUNA_VALOR)) + " / " +
+                        cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DATA)) + " / " +
+                        cursor.getString(cursor.getColumnIndex(BDCore.COLUNA_DESCRICAO)) + " / " +
+                        cursor.getInt(cursor.getColumnIndex(BDCore.COLUNA_ID_CATEGORIA)));
             } while (cursor.moveToNext());
         }
         cursor.close();
-        //    catDAO.fecharConexao();
         return list;
     }
 
@@ -157,7 +168,7 @@ public class TransacaoDAO {
         }
 
         if (ano == 0) {//todos os anos
-            dataInicial = "2015" + "-" + Utilidade.formataNumero(1, 2) + "-01";
+            dataInicial = "2016" + "-" + Utilidade.formataNumero(1, 2) + "-01";
             dataFinal = Utilidade.getAno() + "-" + Utilidade.formataNumero(12, 2) + "-" + Utilidade.ultimoDiadoMes(12);
         }
 

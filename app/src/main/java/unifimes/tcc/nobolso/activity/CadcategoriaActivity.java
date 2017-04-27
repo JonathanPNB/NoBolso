@@ -79,7 +79,7 @@ public class CadcategoriaActivity extends AppCompatActivity {
 
         Categoria cat = new Categoria(edtNomeCategoria.getText().toString(), tipo, true);
 
-        catDAO.salvar(this, cat);
+        catDAO.salvar(cat);
         intent = new Intent(getBaseContext(), CategoriasActivity.class);
         startActivity(intent);
         finish();

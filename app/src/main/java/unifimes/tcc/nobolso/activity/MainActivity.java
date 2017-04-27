@@ -1,8 +1,6 @@
 package unifimes.tcc.nobolso.activity;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -10,21 +8,19 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import java.math.BigDecimal;
 
 import unifimes.tcc.nobolso.R;
 import unifimes.tcc.nobolso.adapter.VisaoGeralAdapter;
+import unifimes.tcc.nobolso.dao.SaldoDAO;
 import unifimes.tcc.nobolso.dao.TransacaoDAO;
 import unifimes.tcc.nobolso.database.BDCore;
 import unifimes.tcc.nobolso.utilidade.Utilidade;
@@ -34,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     Bundle bundle = new Bundle();
     Intent intent;
     TransacaoDAO tDAO;
+    SaldoDAO sDAO;
 
     private Toast toast;
     private long lastBackPressTime = 0;
@@ -44,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         tDAO = new TransacaoDAO(this);
+        sDAO = new SaldoDAO(this);
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//deixa a tela apenas na vertical
         this.listViewVisaoGeralAdapter();
@@ -107,15 +105,16 @@ public class MainActivity extends AppCompatActivity {
 
         BigDecimal saldoAcumulado, totalReceita, totalDespesa, saldoMes;
 
-        totalReceita = Utilidade.somaValores(tDAO.transacoesMes(BDCore.NOME_TABELA_RECEITA, Utilidade.getMes(), Utilidade.getAno()));
-        totalDespesa = Utilidade.somaValores(tDAO.transacoesMes(BDCore.NOME_TABELA_DESPESA, Utilidade.getMes(), Utilidade.getAno()));
-        saldoMes = totalReceita.add(totalDespesa);
+        totalReceita = Utilidade.somaValorTransacao(tDAO.transacoesMes(BDCore.NOME_TABELA_RECEITA, Utilidade.getMes(),
+                Utilidade.getAno()));
+        totalDespesa = Utilidade.somaValorTransacao(tDAO.transacoesMes(BDCore.NOME_TABELA_DESPESA, Utilidade.getMes(),
+                Utilidade.getAno())).abs();
+        saldoMes = totalReceita.add(totalDespesa.negate());
 
-        saldoAcumulado = Utilidade.somaValores(tDAO.buscarTodasTransacoes())/*.subtract(saldoMes)*/;
+        saldoAcumulado = Utilidade.somaValorSaldo(sDAO.buscarSaldos());
 
-        Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), "buscarTodasTransacoes = " + Utilidade.somaValores(tDAO.buscarTodasTransacoes()) +
-                " / saldoAcumulado = " + saldoAcumulado.toString());
-        Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), Utilidade.getMes() + "/" + Utilidade.getAno());
+        Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), "buscarTodasTransacoes = " +
+                Utilidade.somaValorTransacao(tDAO.buscarTodasTransacoes()) + " / saldoAcumulado = " + saldoAcumulado.toString());
 
         String[] tipos = {"Saldo Acumulado", "Receita", "Despesa", "Saldo do Mês"};
         BigDecimal[] valores = {saldoAcumulado, totalReceita, totalDespesa, saldoMes};

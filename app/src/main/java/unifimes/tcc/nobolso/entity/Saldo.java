@@ -56,6 +56,6 @@ public class Saldo {
 
     @Override
     public String toString() {
-        return getId() + " - " + getMes() + "/" + getAno() + " - R$" + getValorSaldo() +"\n";
+        return "Saldo: "+getId() + " - " + getMes() + "/" + getAno() + " - R$" + getValorSaldo() +"\n";
     }
 }

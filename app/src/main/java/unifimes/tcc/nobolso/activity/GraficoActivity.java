@@ -33,7 +33,6 @@ public class GraficoActivity extends AppCompatActivity {
     TextView textoErro;
     ListView listView;
     int[] allColors;
-    private String LOG_TAG = getClass().getSimpleName()+"/"+ Utilidade.classeChamadora();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +92,7 @@ public class GraficoActivity extends AppCompatActivity {
     }
 
     private void geraPieGraph(ArrayList<Transacao> lista/*, String tipoTransacao*/) {//FUNCIONANDO
-        Log.e(LOG_TAG, "Lista = " + lista.toString());
+        Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), "Lista = " + lista.toString());
         TreeMap<String, BigDecimal> listaValores = new TreeMap<>();
       /*  if (tipoTransacao.equalsIgnoreCase("Todos")) {
             float valorReceitas = 0;
@@ -137,13 +136,13 @@ public class GraficoActivity extends AppCompatActivity {
                     listaValores.put(lista.get(i).getCategoria(),
                             listaValores.get(lista.get(i).getCategoria()).add(new BigDecimal(String.valueOf(valorTransacao))));
                 }
-                Log.e(LOG_TAG, lista.get(i).getCategoria() + " = " + new BigDecimal(String.valueOf(valorTransacao)) +
-                        " / lista.size = " + lista.size());
+                Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), lista.get(i).getCategoria() + " = " +
+                        new BigDecimal(String.valueOf(valorTransacao)) + " / lista.size = " + lista.size());
             }
             int quantidadeChaves = 0;
             for (String chave : listaValores.keySet()) {
                 if (chave != null) {
-                    Log.e(LOG_TAG, chave + " = " + listaValores.get(chave));
+                    Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), chave + " = " + listaValores.get(chave));
                     PieSlice slice = new PieSlice();
                     slice.setColor(allColors[quantidadeChaves]);
                     slice.setValue(listaValores.get(chave).floatValue());
@@ -156,7 +155,7 @@ public class GraficoActivity extends AppCompatActivity {
         if (allColors.length > 0 && !listaValores.isEmpty()) {
             for (String chave : listaValores.keySet()) {
                 if (chave != null) {
-                    Log.e(LOG_TAG, "Chave: " + chave);
+                    Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), "Chave: " + chave);
                 }
             }
             listView.setAdapter(new GraficoAdapter(this, allColors, listaValores));

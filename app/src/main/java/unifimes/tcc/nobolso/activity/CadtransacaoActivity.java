@@ -210,16 +210,6 @@ public class CadtransacaoActivity extends AppCompatActivity {
                         tran.setValor(new BigDecimal(edtValor.getText().toString().replaceAll("[.]", "").replaceAll("[,]", ".")));
                     }
 
-                /*    String aux = edtData.getText().toString();
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                    Date dataTransacao = null;
-                    try {
-                        dataTransacao = sdf.parse(aux);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    sdf.applyPattern("yyyy-MM-dd");
-                    aux = sdf.format(dataTransacao);*/
                     tran.setData(Utilidade.formataData("dd/MM/yyyy", "yyyy-MM-dd", edtData.getText().toString()));
                     Log.e(getClass().getSimpleName()+"/"+Utilidade.classeChamadora(), tran.toString());
 

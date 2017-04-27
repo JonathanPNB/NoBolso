@@ -112,12 +112,7 @@ public class RelatoriosActivity extends AppCompatActivity {
                     bundle.putString("Título", "Visualizar");
                     bundle.putString("tipoRelatório", "lista");
                     bundle.putString("relatorioLista", spinnerTipoFiltro.getItemAtPosition(filtroSel).toString());
-                 /*   bundle.putInt("mesSel", mesSel);
-                    if (anoSel > 0) {
-                        bundle.putInt("anoSel", Integer.parseInt(spinnerAno.getItemAtPosition(anoSel).toString()));
-                    } else {
-                        bundle.putInt("anoSel", anoSel);
-                    }*/
+
                     intent = new Intent(this, ListaTransacoesActivity.class);
                     intent.putExtras(bundle);
                 }
